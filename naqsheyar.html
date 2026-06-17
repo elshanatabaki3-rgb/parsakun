@@ -1,0 +1,1998 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نقشه‌یار - بازی حدس کشور</title>
+<style>
+/* ===== فونت و متغیرهای رنگی ===== */
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700;900&display=swap');
+
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8C96A;
+  --gold-dark: #9A7A30;
+  --teal: #1A6B7C;
+  --teal-light: #2A8FA6;
+  --teal-dark: #0D4A57;
+  --bg-dark: #0D1117;
+  --bg-card: #161B22;
+  --bg-card2: #1C2330;
+  --text-main: #E8EDF2;
+  --text-muted: #8B9AB0;
+  --success: #2ECC71;
+  --danger: #E74C3C;
+  --warning: #F39C12;
+  --border: rgba(201,168,76,0.2);
+  --shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Vazirmatn', 'Tahoma', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== هدر ===== */
+header {
+  background: linear-gradient(135deg, var(--bg-card) 0%, var(--teal-dark) 100%);
+  border-bottom: 2px solid var(--gold-dark);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 12px rgba(201,168,76,0.4);
+}
+
+.logo-text {
+  font-size: 1.6rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+}
+
+.logo-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+}
+
+.header-stats {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.stat-pill {
+  background: rgba(201,168,76,0.1);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  color: var(--gold-light);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== صفحه‌ی شروع ===== */
+#screen-intro {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: radial-gradient(ellipse at center, #1A2A3A 0%, var(--bg-dark) 70%);
+}
+
+.intro-box {
+  max-width: 560px;
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: var(--shadow), 0 0 80px rgba(201,168,76,0.08);
+  animation: fadeInUp 0.7s ease;
+}
+
+.intro-title {
+  font-size: 3rem;
+  font-weight: 900;
+  text-align: center;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.intro-subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-bottom: 30px;
+}
+
+.mode-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.mode-card {
+  background: var(--bg-card2);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.mode-card:hover, .mode-card.active {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201,168,76,0.2);
+}
+
+.mode-card .mode-icon { font-size: 2.2rem; margin-bottom: 8px; }
+.mode-card .mode-name { font-weight: 700; font-size: 1rem; color: var(--gold-light); }
+.mode-card .mode-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+
+.player-inputs { margin-bottom: 20px; display: none; }
+.player-inputs.show { display: block; }
+
+.input-group {
+  margin-bottom: 12px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.inp {
+  width: 100%;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 14px;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+.inp:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all 0.25s;
+  text-align: center;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: #1A1000;
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201,168,76,0.4);
+}
+
+.btn-secondary {
+  background: rgba(26,107,124,0.2);
+  color: var(--teal-light);
+  border: 1px solid var(--teal);
+}
+
+.btn-secondary:hover {
+  background: rgba(26,107,124,0.4);
+}
+
+.btn-danger {
+  background: rgba(231,76,60,0.15);
+  color: #E74C3C;
+  border: 1px solid rgba(231,76,60,0.4);
+}
+
+.btn-danger:hover { background: rgba(231,76,60,0.3); }
+
+.btn-sm { padding: 8px 16px; font-size: 0.82rem; border-radius: 8px; }
+
+/* ===== صفحه‌ی بازی ===== */
+#screen-game {
+  display: none;
+  padding: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ===== پانل اطلاعات بازی ===== */
+.game-info-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 18px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.turn-badge {
+  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.timer-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timer-circle {
+  width: 52px; height: 52px;
+  position: relative;
+}
+
+.timer-circle svg {
+  transform: rotate(-90deg);
+}
+
+.timer-circle .timer-bg { fill: none; stroke: var(--bg-dark); stroke-width: 5; }
+.timer-circle .timer-fg { fill: none; stroke: var(--gold); stroke-width: 5;
+  stroke-dasharray: 138; stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear, stroke 0.3s; stroke-linecap: round; }
+
+.timer-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1rem;
+  color: var(--gold-light);
+}
+
+/* ===== کارت شهر ===== */
+.city-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+.city-img-wrap {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  background: var(--bg-dark);
+}
+
+.city-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.city-img:hover { transform: scale(1.04); }
+
+.city-overlay {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  padding: 20px 16px 12px;
+}
+
+.city-name-label {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+}
+
+.clue-display {
+  margin: 12px 16px;
+  min-height: 36px;
+  padding: 8px 14px;
+  background: rgba(201,168,76,0.08);
+  border: 1px dashed var(--gold-dark);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--gold-light);
+  display: none;
+}
+
+.clue-display.show { display: block; }
+
+.hint-section {
+  padding: 0 16px 16px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ===== نقشه‌ی جهان ===== */
+.map-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.map-title { font-size: 0.9rem; color: var(--text-muted); }
+
+#worldMap {
+  width: 100%;
+  cursor: crosshair;
+  display: block;
+  background: #0A1A2E;
+  flex: 1;
+}
+
+.map-tools {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.draw-color-btn {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.draw-color-btn.active { border-color: #fff; transform: scale(1.2); }
+
+/* ===== ورودی حدس ===== */
+.guess-section {
+  grid-column: 1 / -1;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.guess-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.guess-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.guess-input-row .inp { flex: 1; }
+
+.country-suggestions {
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-top: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+  display: none;
+}
+
+.country-suggestions.show { display: block; }
+
+.sugg-item {
+  padding: 9px 14px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sugg-item:hover, .sugg-item.highlighted { background: rgba(201,168,76,0.12); color: var(--gold-light); }
+
+/* ===== نتیجه ===== */
+.result-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.result-overlay.show {
+  display: flex;
+  animation: fadeIn 0.3s ease;
+}
+
+.result-box {
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  padding: 36px;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  box-shadow: var(--shadow);
+  animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.result-emoji { font-size: 4rem; margin-bottom: 12px; }
+.result-title { font-size: 1.6rem; font-weight: 900; margin-bottom: 6px; }
+.result-title.correct { color: var(--success); }
+.result-title.wrong { color: var(--danger); }
+.result-title.close { color: var(--warning); }
+.result-answer { font-size: 1rem; color: var(--text-muted); margin-bottom: 20px; }
+.result-points { font-size: 2rem; font-weight: 900; color: var(--gold-light); margin-bottom: 20px; }
+.result-points span { font-size: 1rem; color: var(--text-muted); font-weight: 400; }
+
+/* ===== تابلوی امتیاز ===== */
+.scoreboard {
+  grid-column: 1 / -1;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.player-score {
+  flex: 1;
+  min-width: 150px;
+  background: var(--bg-card2);
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.player-score.active-turn {
+  border-color: var(--gold);
+  box-shadow: 0 0 20px rgba(201,168,76,0.2);
+}
+
+.player-score .p-name {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.player-score .p-pts {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--gold-light);
+}
+
+.player-score .p-rounds {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ===== انیمیشن‌ها ===== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.7); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@keyframes pulse-gold {
+  0%,100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(201,168,76,0); }
+}
+
+.shake { animation: shake 0.4s ease; }
+.pulse-gold { animation: pulse-gold 0.6s ease; }
+
+/* ===== ریسپانسیو ===== */
+@media (max-width: 700px) {
+  .game-grid { grid-template-columns: 1fr; }
+  .mode-cards { grid-template-columns: 1fr; }
+  .intro-box { padding: 24px 18px; }
+  .intro-title { font-size: 2.2rem; }
+  .header-stats { display: none; }
+  .city-img-wrap { height: 180px; }
+}
+
+/* ===== اسکرول‌بار ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: var(--teal-dark); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--teal); }
+
+.round-counter {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.hint-count {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hint-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  transition: background 0.3s;
+}
+
+.hint-dot.used { background: var(--bg-dark); border: 1px solid var(--text-muted); }
+
+/* Loading spinner */
+.loading-city {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-dark);
+  font-size: 2rem;
+  animation: pulse 1s ease infinite alternate;
+}
+
+@keyframes pulse {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+
+.img-error {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 8px;
+  background: linear-gradient(135deg, #1A2A3A, #0D1A2A);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.img-error .big-icon { font-size: 3rem; }
+
+/* Map click indicator */
+.map-click-ring {
+  position: absolute;
+  pointer-events: none;
+  border: 3px solid var(--gold);
+  border-radius: 50%;
+  width: 24px; height: 24px;
+  transform: translate(-50%, -50%);
+  animation: ringExpand 0.5s ease forwards;
+}
+
+@keyframes ringExpand {
+  from { width: 0; height: 0; opacity: 1; }
+  to { width: 40px; height: 40px; opacity: 0; }
+}
+
+.map-pin {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  font-size: 1.5rem;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+  transition: all 0.3s;
+}
+
+.answer-pin {
+  color: var(--success);
+}
+
+.guess-pin {
+  color: var(--danger);
+}
+</style>
+</head>
+<body>
+
+<!-- ===== هدر ===== -->
+<header id="mainHeader" style="display:none">
+  <div class="logo">
+    <div class="logo-icon">🗺</div>
+    <div>
+      <div class="logo-text">نقشه‌یار</div>
+      <div class="logo-sub">N · M · Y</div>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="stat-pill">🏆 <span id="hdrScore">۰</span> امتیاز</div>
+    <div class="stat-pill">🎯 دور <span id="hdrRound">۱</span></div>
+    <button class="btn btn-secondary btn-sm" onclick="returnToMenu()">🏠 منو</button>
+  </div>
+</header>
+
+<!-- ===== صفحه‌ی شروع ===== -->
+<div id="screen-intro">
+  <div class="intro-box">
+    <div style="font-size:4rem;text-align:center;margin-bottom:8px">🌍</div>
+    <div class="intro-title">نقشه‌یار</div>
+    <div class="intro-subtitle">شهرهای دنیا رو بشناس، کشورشون رو حدس بزن!</div>
+
+    <div class="mode-cards">
+      <div class="mode-card active" id="modeCard1" onclick="selectMode('solo')">
+        <div class="mode-icon">👤</div>
+        <div class="mode-name">تک‌نفره</div>
+        <div class="mode-desc">حدس بزن و امتیاز بگیر</div>
+      </div>
+      <div class="mode-card" id="modeCard2" onclick="selectMode('duo')">
+        <div class="mode-icon">👥</div>
+        <div class="mode-name">دو نفره</div>
+        <div class="mode-desc">نوبتی با دوستت بازی کن</div>
+      </div>
+    </div>
+
+    <div class="player-inputs" id="playerInputs">
+      <div class="input-group">
+        <label>نام بازیکن اول</label>
+        <input class="inp" id="name1" placeholder="مثلاً: علی" value="بازیکن ۱">
+      </div>
+      <div class="input-group">
+        <label>نام بازیکن دوم</label>
+        <input class="inp" id="name2" placeholder="مثلاً: سارا" value="بازیکن ۲">
+      </div>
+    </div>
+
+    <div class="input-group" id="soloNameWrap">
+      <label>اسمت چیه؟</label>
+      <input class="inp" id="soloName" placeholder="نامت رو وارد کن" value="بازیکن">
+    </div>
+
+    <button class="btn btn-primary" onclick="startGame()" style="margin-top:16px">
+      🚀 شروع بازی
+    </button>
+  </div>
+</div>
+
+<!-- ===== صفحه‌ی بازی ===== -->
+<div id="screen-game">
+
+  <!-- نوار اطلاعات بازی -->
+  <div class="game-info-bar">
+    <div id="turnBadge" class="turn-badge">نوبت: ---</div>
+
+    <div class="timer-wrap">
+      <div class="timer-circle">
+        <svg width="52" height="52" viewBox="0 0 52 52">
+          <circle class="timer-bg" cx="26" cy="26" r="22"/>
+          <circle class="timer-fg" id="timerArc" cx="26" cy="26" r="22"/>
+        </svg>
+        <div class="timer-text" id="timerNum">۳۰</div>
+      </div>
+    </div>
+
+    <div class="round-counter">دور <strong id="roundNum">۱</strong> از ۱۰</div>
+  </div>
+
+  <!-- تابلوی امتیاز -->
+  <div class="scoreboard" id="scoreboard">
+    <div class="player-score active-turn" id="pscore1">
+      <div class="p-name" id="pname1">بازیکن ۱</div>
+      <div class="p-pts" id="ppts1">۰</div>
+      <div class="p-rounds" id="prounds1">۰ دور درست</div>
+    </div>
+    <div class="player-score" id="pscore2" style="display:none">
+      <div class="p-name" id="pname2">بازیکن ۲</div>
+      <div class="p-pts" id="ppts2">۰</div>
+      <div class="p-rounds" id="prounds2">۰ دور درست</div>
+    </div>
+  </div>
+
+  <div class="game-grid">
+
+    <!-- کارت شهر -->
+    <div class="city-card">
+      <div class="city-img-wrap" id="imgWrap">
+        <div class="loading-city" id="loadingCity">⏳</div>
+        <img id="cityImg" class="city-img" src="" alt="" style="display:none"
+          onload="imgLoaded()" onerror="imgError()">
+        <div class="city-overlay">
+          <div class="city-name-label" id="cityNameLabel">---</div>
+        </div>
+      </div>
+
+      <div class="clue-display" id="clueDisplay"></div>
+
+      <div class="hint-section">
+        <button class="btn btn-secondary btn-sm" onclick="giveHint()">💡 راهنمایی</button>
+        <div class="hint-count" id="hintCount">
+          <div class="hint-dot" id="h1"></div>
+          <div class="hint-dot" id="h2"></div>
+          <div class="hint-dot" id="h3"></div>
+          <span style="margin-right:4px">راهنمایی باقی‌مانده</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- نقشه‌ی جهان -->
+    <div class="map-card">
+      <div class="map-header">
+        <span class="map-title">🗺 روی نقشه کلیک کن یا نقاشی بکش</span>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="font-size:0.75rem;color:var(--text-muted)">رنگ:</span>
+          <div class="draw-color-btn active" style="background:#1E90FF" onclick="setColor('#1E90FF',this)"></div>
+          <div class="draw-color-btn" style="background:#E74C3C" onclick="setColor('#E74C3C',this)"></div>
+          <div class="draw-color-btn" style="background:#2ECC71" onclick="setColor('#2ECC71',this)"></div>
+          <div class="draw-color-btn" style="background:#F39C12" onclick="setColor('#F39C12',this)"></div>
+        </div>
+      </div>
+      <div style="position:relative;flex:1">
+        <canvas id="worldMap"></canvas>
+      </div>
+      <div class="map-tools">
+        <button class="btn btn-danger btn-sm" onclick="clearCanvas()">🗑 پاک کردن</button>
+        <button class="btn btn-secondary btn-sm" onclick="toggleDrawMode()" id="drawModeBtn">✏️ حالت نقاشی</button>
+        <span style="font-size:0.78rem;color:var(--text-muted)" id="mapStatus">برای حدس روی کشور کلیک کن</span>
+      </div>
+    </div>
+
+    <!-- ورودی حدس -->
+    <div class="guess-section">
+      <span class="guess-label">🌍 نام کشور را تایپ کن:</span>
+      <div class="guess-input-row">
+        <input class="inp" id="guessInput" placeholder="نام کشور (فارسی یا انگلیسی)..."
+          autocomplete="off" oninput="onGuessInput()" onkeydown="onGuessKey(event)">
+        <button class="btn btn-primary" onclick="submitGuess()" style="width:auto;padding:11px 20px">
+          ✅ ثبت
+        </button>
+      </div>
+      <div class="country-suggestions" id="suggestions"></div>
+    </div>
+
+  </div><!-- /game-grid -->
+</div><!-- /screen-game -->
+
+<!-- ===== پنجره‌ی نتیجه ===== -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-box" id="resultBox">
+    <div class="result-emoji" id="resultEmoji">🎉</div>
+    <div class="result-title" id="resultTitle">درست!</div>
+    <div class="result-answer" id="resultAnswer"></div>
+    <div class="result-points" id="resultPoints">+۱۰۰ <span>امتیاز</span></div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="nextRound()" id="nextBtn">دور بعد ←</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== پنجره‌ی پایان بازی ===== -->
+<div class="result-overlay" id="endOverlay">
+  <div class="result-box">
+    <div style="font-size:3.5rem;margin-bottom:12px">🏆</div>
+    <div class="result-title" style="color:var(--gold-light);margin-bottom:16px">پایان بازی!</div>
+    <div id="endContent"></div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="restartGame()">🔄 دوباره بازی</button>
+      <button class="btn btn-secondary" onclick="returnToMenu()">🏠 منو</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===================================================
+   داده‌های شهرها و کشورها
+   =================================================== */
+
+const CITIES = [
+  { name:"برج ایفل", city:"پاریس", country:"France", fa:"فرانسه", continent:"Europe",
+    img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Smiley.svg/1200px-Smiley.svg.png",
+    realImg:"https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?w=600&q=80",
+    clues:["در قاره‌ی اروپا","کشور مد و هنر","پایتخت آن پاریس است"] },
+  { name:"کلوسئوم", city:"رم", country:"Italy", fa:"ایتالیا", continent:"Europe",
+    realImg:"https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=600&q=80",
+    clues:["در شبه‌جزیره‌ی ایتالیایی","پایتخت آن رم است","کشور پیتزا و اسپاگتی"] },
+  { name:"تاج محل", city:"آگرا", country:"India", fa:"هند", continent:"Asia",
+    realImg:"https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600&q=80",
+    clues:["در جنوب آسیا","پرجمعیت‌ترین کشور جهان","رودخانه‌ی گنگ از اینجا عبور می‌کند"] },
+  { name:"اهرام جیزه", city:"قاهره", country:"Egypt", fa:"مصر", continent:"Africa",
+    realImg:"https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=600&q=80",
+    clues:["در شمال آفریقا","رود نیل از اینجا عبور می‌کند","پایتخت آن قاهره است"] },
+  { name:"مجسمه‌ی آزادی", city:"نیویورک", country:"United States of America", fa:"آمریکا", continent:"North America",
+    realImg:"https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=600&q=80",
+    clues:["در آمریکای شمالی","قدرتمندترین کشور جهان","پایتخت آن واشنگتن دی‌سی است"] },
+  { name:"بیگ بن", city:"لندن", country:"United Kingdom", fa:"انگلستان", continent:"Europe",
+    realImg:"https://images.unsplash.com/photo-1529655683826-aba9b3e77383?w=600&q=80",
+    clues:["در اروپای غربی","جزیره‌ای در اقیانوس اطلس","پایتخت آن لندن است"] },
+  { name:"اپرای سیدنی", city:"سیدنی", country:"Australia", fa:"استرالیا", continent:"Oceania",
+    realImg:"https://images.unsplash.com/photo-1524293657210-37b61c9e8a2b?w=600&q=80",
+    clues:["در اقیانوسیه","بزرگترین کشور قاره‌ی استرالیا","کانگارو حیوان بومی آن است"] },
+  { name:"برج کج پیزا", city:"پیزا", country:"Italy", fa:"ایتالیا", continent:"Europe",
+    realImg:"https://images.unsplash.com/photo-1568797629192-789acf8e4df3?w=600&q=80",
+    clues:["در شبه‌جزیره‌ی ایتالیایی","دریای مدیترانه در کنار آن","مشهور به هنر رنسانس"] },
+  { name:"معبد پارتنون", city:"آتن", country:"Greece", fa:"یونان", continent:"Europe",
+    realImg:"https://images.unsplash.com/photo-1555993539-1732b0258235?w=600&q=80",
+    clues:["در یونان باستان","دریای اژه در کنار آن","پایتخت آن آتن است"] },
+  { name:"دیوار بزرگ چین", city:"پکن", country:"China", fa:"چین", continent:"Asia",
+    realImg:"https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=600&q=80",
+    clues:["در آسیای شرقی","پرجمعیت‌ترین کشور تا اخیراً","زبان رسمی آن ماندارین است"] },
+  { name:"برج خلیفه", city:"دبی", country:"United Arab Emirates", fa:"امارات", continent:"Asia",
+    realImg:"https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&q=80",
+    clues:["در خلیج فارس","کشور کوچک و ثروتمند","پایتخت آن ابوظبی است"] },
+  { name:"ساگرادا فامیلیا", city:"بارسلون", country:"Spain", fa:"اسپانیا", continent:"Europe",
+    realImg:"https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=600&q=80",
+    clues:["در شبه‌جزیره‌ی ایبری","دریای مدیترانه در کنار آن","زبان اسپانیایی صحبت می‌شود"] },
+  { name:"کاخ پترا", city:"پترا", country:"Jordan", fa:"اردن", continent:"Asia",
+    realImg:"https://images.unsplash.com/photo-1548786811-dd6e453ccca7?w=600&q=80",
+    clues:["در خاورمیانه","کشور کوچک عربی","همسایه‌ی اسرائیل و عربستان"] },
+  { name:"ماچوپیچو", city:"کوسکو", country:"Peru", fa:"پرو", continent:"South America",
+    realImg:"https://images.unsplash.com/photo-1526392060635-9d6019884377?w=600&q=80",
+    clues:["در آمریکای جنوبی","کوه‌های آند در اینجاست","تمدن اینکا اینجا بود"] },
+  { name:"برج پیزا", city:"پیزا", country:"Italy", fa:"ایتالیا", continent:"Europe",
+    realImg:"https://images.unsplash.com/photo-1499678329028-101435549a4e?w=600&q=80",
+    clues:["در اروپای جنوبی","کشور بوت شکل","مشهور به پاستا و پیتزا"] },
+  { name:"فواره‌ی ترِوی", city:"رم", country:"Italy", fa:"ایتالیا", continent:"Europe",
+    realImg:"https://images.unsplash.com/photo-1575535498887-1cbf8e8ddac4?w=600&q=80",
+    clues:["در قاره‌ی اروپا","شهر رم در آن قرار دارد","کشور آغازگر رنسانس"] },
+  { name:"معبد آنگکوروات", city:"سیم‌ریپ", country:"Cambodia", fa:"کامبوج", continent:"Asia",
+    realImg:"https://images.unsplash.com/photo-1568025721679-85f0e06b22a6?w=600&q=80",
+    clues:["در آسیای جنوب شرقی","رود مکونگ از اینجا می‌گذرد","پایتخت آن پنوم‌پن است"] },
+  { name:"کلیسای جامع سنت بازیل", city:"مسکو", country:"Russia", fa:"روسیه", continent:"Europe",
+    realImg:"https://images.unsplash.com/photo-1513326738677-b964603b136d?w=600&q=80",
+    clues:["بزرگترین کشور جهان از نظر مساحت","در اروپا و آسیا قرار دارد","پایتخت آن مسکو است"] },
+  { name:"کاخ مرمر", city:"توکیو", country:"Japan", fa:"ژاپن", continent:"Asia",
+    realImg:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&q=80",
+    clues:["در آسیای شرقی","جزیره‌ای در اقیانوس آرام","کشور فناوری و انیمه"] },
+  { name:"آبشار نیاگارا", city:"نیاگارا", country:"Canada", fa:"کانادا", continent:"North America",
+    realImg:"https://images.unsplash.com/photo-1614890094520-9d2d7ebc9a8d?w=600&q=80",
+    clues:["دومین کشور بزرگ جهان","در آمریکای شمالی","زبان رسمی انگلیسی و فرانسه"] },
+  { name:"قلعه‌ی ادینبورگ", city:"ادینبورگ", country:"United Kingdom", fa:"انگلستان", continent:"Europe",
+    realImg:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80",
+    clues:["در اروپای شمال غربی","جزیره‌نشین در اقیانوس اطلس","مشهور به فوتبال و ویسکی"] },
+  { name:"آکروپلیس", city:"آتن", country:"Greece", fa:"یونان", continent:"Europe",
+    realImg:"https://images.unsplash.com/photo-1555993539-1732b0258235?w=600&q=80",
+    clues:["گهواره‌ی تمدن غرب","در اروپای جنوبی","دریای اژه در کنار آن"] },
+  { name:"برج سی‌ان", city:"تورنتو", country:"Canada", fa:"کانادا", continent:"North America",
+    realImg:"https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=600&q=80",
+    clues:["در آمریکای شمالی","همسایه‌ی آمریکا","کشور شاخه‌ی افرا"] },
+  { name:"دروازه‌ی براندنبورگ", city:"برلین", country:"Germany", fa:"آلمان", continent:"Europe",
+    realImg:"https://images.unsplash.com/photo-1587330979470-3595ac045ab0?w=600&q=80",
+    clues:["در اروپای مرکزی","اقتصاد قوی اروپا","مشهور به ماشین‌سازی"] },
+];
+
+/* ===== لیست تمام کشورها با ترجمه‌ی فارسی ===== */
+const ALL_COUNTRIES = [
+  ["Afghanistan","افغانستان","Asia"],["Albania","آلبانی","Europe"],
+  ["Algeria","الجزایر","Africa"],["Andorra","آندورا","Europe"],
+  ["Angola","آنگولا","Africa"],["Argentina","آرژانتین","South America"],
+  ["Armenia","ارمنستان","Asia"],["Australia","استرالیا","Oceania"],
+  ["Austria","اتریش","Europe"],["Azerbaijan","آذربایجان","Asia"],
+  ["Bahrain","بحرین","Asia"],["Bangladesh","بنگلادش","Asia"],
+  ["Belarus","بلاروس","Europe"],["Belgium","بلژیک","Europe"],
+  ["Belize","بلیز","North America"],["Benin","بنین","Africa"],
+  ["Bhutan","بوتان","Asia"],["Bolivia","بولیوی","South America"],
+  ["Bosnia and Herzegovina","بوسنی و هرزگوین","Europe"],["Botswana","بوتسوانا","Africa"],
+  ["Brazil","برزیل","South America"],["Brunei","برونئی","Asia"],
+  ["Bulgaria","بلغارستان","Europe"],["Burkina Faso","بورکینافاسو","Africa"],
+  ["Burundi","بوروندی","Africa"],["Cambodia","کامبوج","Asia"],
+  ["Cameroon","کامرون","Africa"],["Canada","کانادا","North America"],
+  ["Chad","چاد","Africa"],["Chile","شیلی","South America"],
+  ["China","چین","Asia"],["Colombia","کلمبیا","South America"],
+  ["Congo","کنگو","Africa"],["Costa Rica","کاستاریکا","North America"],
+  ["Croatia","کرواسی","Europe"],["Cuba","کوبا","North America"],
+  ["Cyprus","قبرس","Asia"],["Czech Republic","جمهوری چک","Europe"],
+  ["Denmark","دانمارک","Europe"],["Djibouti","جیبوتی","Africa"],
+  ["Dominican Republic","جمهوری دومینیکن","North America"],["Ecuador","اکوادور","South America"],
+  ["Egypt","مصر","Africa"],["El Salvador","السالوادور","North America"],
+  ["Eritrea","اریتره","Africa"],["Estonia","استونی","Europe"],
+  ["Ethiopia","اتیوپی","Africa"],["Fiji","فیجی","Oceania"],
+  ["Finland","فنلاند","Europe"],["France","فرانسه","Europe"],
+  ["Gabon","گابن","Africa"],["Georgia","گرجستان","Asia"],
+  ["Germany","آلمان","Europe"],["Ghana","غنا","Africa"],
+  ["Greece","یونان","Europe"],["Guatemala","گواتمالا","North America"],
+  ["Guinea","گینه","Africa"],["Haiti","هائیتی","North America"],
+  ["Honduras","هندوراس","North America"],["Hungary","مجارستان","Europe"],
+  ["Iceland","ایسلند","Europe"],["India","هند","Asia"],
+  ["Indonesia","اندونزی","Asia"],["Iran","ایران","Asia"],
+  ["Iraq","عراق","Asia"],["Ireland","ایرلند","Europe"],
+  ["Israel","اسرائیل","Asia"],["Italy","ایتالیا","Europe"],
+  ["Jamaica","جامائیکا","North America"],["Japan","ژاپن","Asia"],
+  ["Jordan","اردن","Asia"],["Kazakhstan","قزاقستان","Asia"],
+  ["Kenya","کنیا","Africa"],["Kosovo","کوزوو","Europe"],
+  ["Kuwait","کویت","Asia"],["Kyrgyzstan","قرقیزستان","Asia"],
+  ["Laos","لائوس","Asia"],["Latvia","لتونی","Europe"],
+  ["Lebanon","لبنان","Asia"],["Libya","لیبی","Africa"],
+  ["Lithuania","لیتوانی","Europe"],["Luxembourg","لوکزامبورگ","Europe"],
+  ["Madagascar","ماداگاسکار","Africa"],["Malaysia","مالزی","Asia"],
+  ["Mali","مالی","Africa"],["Malta","مالتا","Europe"],
+  ["Mexico","مکزیک","North America"],["Moldova","مولداوی","Europe"],
+  ["Mongolia","مغولستان","Asia"],["Montenegro","مونته‌نگرو","Europe"],
+  ["Morocco","مراکش","Africa"],["Mozambique","موزامبیک","Africa"],
+  ["Myanmar","میانمار","Asia"],["Namibia","نامیبیا","Africa"],
+  ["Nepal","نپال","Asia"],["Netherlands","هلند","Europe"],
+  ["New Zealand","نیوزلند","Oceania"],["Nicaragua","نیکاراگوئه","North America"],
+  ["Niger","نیجر","Africa"],["Nigeria","نیجریه","Africa"],
+  ["North Korea","کره‌ی شمالی","Asia"],["North Macedonia","مقدونیه‌ی شمالی","Europe"],
+  ["Norway","نروژ","Europe"],["Oman","عمان","Asia"],
+  ["Pakistan","پاکستان","Asia"],["Palestine","فلسطین","Asia"],
+  ["Panama","پاناما","North America"],["Papua New Guinea","پاپوآ گینه‌ی نو","Oceania"],
+  ["Paraguay","پاراگوئه","South America"],["Peru","پرو","South America"],
+  ["Philippines","فیلیپین","Asia"],["Poland","لهستان","Europe"],
+  ["Portugal","پرتغال","Europe"],["Qatar","قطر","Asia"],
+  ["Romania","رومانی","Europe"],["Russia","روسیه","Europe"],
+  ["Rwanda","رواندا","Africa"],["Saudi Arabia","عربستان","Asia"],
+  ["Senegal","سنگال","Africa"],["Serbia","صربستان","Europe"],
+  ["Sierra Leone","سیرالئون","Africa"],["Slovakia","اسلواکی","Europe"],
+  ["Slovenia","اسلوونی","Europe"],["Somalia","سومالی","Africa"],
+  ["South Africa","آفریقای جنوبی","Africa"],["South Korea","کره‌ی جنوبی","Asia"],
+  ["South Sudan","سودان جنوبی","Africa"],["Spain","اسپانیا","Europe"],
+  ["Sri Lanka","سریلانکا","Asia"],["Sudan","سودان","Africa"],
+  ["Sweden","سوئد","Europe"],["Switzerland","سوئیس","Europe"],
+  ["Syria","سوریه","Asia"],["Taiwan","تایوان","Asia"],
+  ["Tajikistan","تاجیکستان","Asia"],["Tanzania","تانزانیا","Africa"],
+  ["Thailand","تایلند","Asia"],["Togo","توگو","Africa"],
+  ["Tunisia","تونس","Africa"],["Turkey","ترکیه","Asia"],
+  ["Turkmenistan","ترکمنستان","Asia"],["Uganda","اوگاندا","Africa"],
+  ["Ukraine","اوکراین","Europe"],["United Arab Emirates","امارات","Asia"],
+  ["United Kingdom","انگلستان","Europe"],["United States of America","آمریکا","North America"],
+  ["Uruguay","اروگوئه","South America"],["Uzbekistan","ازبکستان","Asia"],
+  ["Venezuela","ونزوئلا","South America"],["Vietnam","ویتنام","Asia"],
+  ["Yemen","یمن","Asia"],["Zambia","زامبیا","Africa"],
+  ["Zimbabwe","زیمبابوه","Africa"],
+];
+
+/* نقشه‌ی ترکیبی همسایگان */
+const NEIGHBORS = {
+  "France":["Spain","Germany","Belgium","Luxembourg","Switzerland","Italy","Monaco","Andorra"],
+  "Italy":["France","Switzerland","Austria","Slovenia","San Marino","Vatican"],
+  "Germany":["France","Belgium","Luxembourg","Netherlands","Denmark","Poland","Czech Republic","Austria","Switzerland"],
+  "Spain":["France","Portugal","Andorra","Morocco"],
+  "Egypt":["Libya","Sudan","Israel","Palestine","Jordan"],
+  "India":["Pakistan","China","Nepal","Bhutan","Bangladesh","Myanmar","Sri Lanka"],
+  "China":["Russia","Mongolia","Kazakhstan","Kyrgyzstan","Tajikistan","Afghanistan","Pakistan","India","Nepal","Bhutan","Myanmar","Laos","Vietnam","North Korea"],
+  "Russia":["Norway","Finland","Estonia","Latvia","Lithuania","Belarus","Ukraine","Georgia","Azerbaijan","Kazakhstan","China","Mongolia","North Korea"],
+  "United States of America":["Canada","Mexico"],
+  "Canada":["United States of America"],
+  "Australia":["New Zealand"],
+  "Japan":["South Korea","North Korea","China"],
+  "United Kingdom":["Ireland","France"],
+  "Turkey":["Greece","Bulgaria","Georgia","Armenia","Azerbaijan","Iran","Iraq","Syria"],
+  "Iran":["Turkey","Iraq","Azerbaijan","Armenia","Turkmenistan","Afghanistan","Pakistan"],
+  "Saudi Arabia":["Jordan","Iraq","Kuwait","Qatar","United Arab Emirates","Oman","Yemen"],
+  "United Arab Emirates":["Saudi Arabia","Oman"],
+  "Jordan":["Israel","Palestine","Syria","Iraq","Saudi Arabia","Egypt"],
+  "Greece":["Albania","North Macedonia","Bulgaria","Turkey"],
+  "Poland":["Germany","Czech Republic","Slovakia","Ukraine","Belarus","Lithuania","Russia"],
+  "Ukraine":["Russia","Belarus","Poland","Slovakia","Hungary","Romania","Moldova"],
+  "Brazil":["Colombia","Venezuela","Guyana","Suriname","French Guiana","Peru","Bolivia","Paraguay","Argentina","Uruguay"],
+  "Peru":["Ecuador","Colombia","Brazil","Bolivia","Chile"],
+  "Cambodia":["Thailand","Laos","Vietnam"],
+};
+
+/* ===================================================
+   وضعیت بازی
+   =================================================== */
+let state = {
+  mode: 'solo',
+  players: [{name:'بازیکن',pts:0,rounds:0},{name:'بازیکن ۲',pts:0,rounds:0}],
+  currentPlayer: 0,
+  round: 0,
+  totalRounds: 10,
+  currentCity: null,
+  hintsUsed: 0,
+  timerVal: 30,
+  timerInterval: null,
+  answered: false,
+  usedCities: [],
+  drawMode: false,
+  drawColor: '#1E90FF',
+};
+
+/* ===================================================
+   Web Audio API
+   =================================================== */
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playSound(type) {
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    if (type === 'correct') {
+      osc.frequency.setValueAtTime(523, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(659, audioCtx.currentTime + 0.1);
+      osc.frequency.setValueAtTime(784, audioCtx.currentTime + 0.2);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+    } else if (type === 'wrong') {
+      osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(200, audioCtx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+    } else if (type === 'close') {
+      osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(392, audioCtx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+    }
+  } catch(e){}
+}
+
+/* ===================================================
+   انتخاب حالت بازی
+   =================================================== */
+function selectMode(mode) {
+  state.mode = mode;
+  document.getElementById('modeCard1').classList.toggle('active', mode==='solo');
+  document.getElementById('modeCard2').classList.toggle('active', mode==='duo');
+  document.getElementById('playerInputs').classList.toggle('show', mode==='duo');
+  document.getElementById('soloNameWrap').style.display = mode==='solo' ? 'block' : 'none';
+}
+
+/* ===================================================
+   شروع بازی
+   =================================================== */
+function startGame() {
+  if (state.mode === 'duo') {
+    state.players[0].name = document.getElementById('name1').value || 'بازیکن ۱';
+    state.players[1].name = document.getElementById('name2').value || 'بازیکن ۲';
+  } else {
+    state.players[0].name = document.getElementById('soloName').value || 'بازیکن';
+  }
+  state.players.forEach(p => { p.pts=0; p.rounds=0; });
+  state.round = 0;
+  state.currentPlayer = 0;
+  state.usedCities = [];
+
+  document.getElementById('screen-intro').style.display = 'none';
+  document.getElementById('screen-game').style.display = 'block';
+  document.getElementById('mainHeader').style.display = 'flex';
+
+  // نمایش امتیاز
+  document.getElementById('pname1').textContent = state.players[0].name;
+  if (state.mode === 'duo') {
+    document.getElementById('pname2').textContent = state.players[1].name;
+    document.getElementById('pscore2').style.display = 'block';
+  }
+
+  initCanvas();
+  nextRound();
+}
+
+/* ===================================================
+   دور جدید
+   =================================================== */
+function nextRound() {
+  document.getElementById('resultOverlay').classList.remove('show');
+  state.answered = false;
+  state.hintsUsed = 0;
+
+  if (state.round >= state.totalRounds) {
+    showEnd(); return;
+  }
+  state.round++;
+  document.getElementById('roundNum').textContent = toPersianNum(state.round);
+  document.getElementById('hdrRound').textContent = toPersianNum(state.round);
+
+  // انتخاب شهر تصادفی
+  let available = CITIES.filter(c => !state.usedCities.includes(c.name));
+  if (!available.length) { state.usedCities = []; available = CITIES; }
+  state.currentCity = available[Math.floor(Math.random() * available.length)];
+  state.usedCities.push(state.currentCity.name);
+
+  // نمایش شهر
+  document.getElementById('cityNameLabel').textContent = state.currentCity.name;
+  loadCityImage();
+
+  // پاکسازی
+  document.getElementById('clueDisplay').classList.remove('show');
+  document.getElementById('clueDisplay').textContent = '';
+  document.getElementById('guessInput').value = '';
+  document.getElementById('suggestions').classList.remove('show');
+  document.getElementById('suggestions').innerHTML = '';
+  updateHintDots();
+
+  // نوبت بازیکن
+  updateTurnUI();
+
+  // تایمر
+  startTimer();
+
+  // نقشه
+  clearMapPins();
+}
+
+function loadCityImage() {
+  const wrap = document.getElementById('imgWrap');
+  const img = document.getElementById('cityImg');
+  const loading = document.getElementById('loadingCity');
+  const errDiv = wrap.querySelector('.img-error');
+  if (errDiv) errDiv.remove();
+
+  img.style.display = 'none';
+  loading.style.display = 'flex';
+  img.src = state.currentCity.realImg;
+}
+
+function imgLoaded() {
+  document.getElementById('loadingCity').style.display = 'none';
+  document.getElementById('cityImg').style.display = 'block';
+}
+
+function imgError() {
+  const wrap = document.getElementById('imgWrap');
+  document.getElementById('loadingCity').style.display = 'none';
+  // نمایش جایگزین
+  let div = document.createElement('div');
+  div.className = 'img-error';
+  div.innerHTML = `<div class="big-icon">🏙</div><div>${state.currentCity.city}</div>`;
+  wrap.appendChild(div);
+}
+
+function updateTurnUI() {
+  const p = state.players[state.currentPlayer];
+  document.getElementById('turnBadge').textContent = 'نوبت: ' + p.name;
+  document.getElementById('pscore1').classList.toggle('active-turn', state.currentPlayer===0);
+  document.getElementById('pscore2').classList.toggle('active-turn', state.currentPlayer===1);
+  document.getElementById('hdrScore').textContent = toPersianNum(state.players[state.currentPlayer].pts);
+}
+
+function updateScoreUI() {
+  state.players.forEach((p,i) => {
+    document.getElementById(`ppts${i+1}`).textContent = toPersianNum(p.pts);
+    document.getElementById(`prounds${i+1}`).textContent = toPersianNum(p.rounds) + ' دور درست';
+  });
+  document.getElementById('hdrScore').textContent = toPersianNum(state.players[state.currentPlayer].pts);
+}
+
+/* ===================================================
+   تایمر
+   =================================================== */
+function startTimer() {
+  clearInterval(state.timerInterval);
+  state.timerVal = 30;
+  updateTimerUI();
+  state.timerInterval = setInterval(() => {
+    state.timerVal--;
+    updateTimerUI();
+    if (state.timerVal <= 0) {
+      clearInterval(state.timerInterval);
+      if (!state.answered) timeUp();
+    }
+  }, 1000);
+}
+
+function updateTimerUI() {
+  const t = state.timerVal;
+  const pct = t / 30;
+  const circ = 2 * Math.PI * 22;
+  const arc = document.getElementById('timerArc');
+  arc.style.strokeDashoffset = (circ * (1 - pct)).toFixed(2);
+
+  const color = t > 15 ? 'var(--gold)' : t > 8 ? 'var(--warning)' : 'var(--danger)';
+  arc.style.stroke = color;
+  document.getElementById('timerNum').textContent = toPersianNum(t);
+  document.getElementById('timerNum').style.color = color;
+}
+
+function timeUp() {
+  if (state.answered) return;
+  state.answered = true;
+  showResult('timeout', 0);
+}
+
+/* ===================================================
+   راهنمایی
+   =================================================== */
+function giveHint() {
+  if (state.hintsUsed >= 3 || state.answered) return;
+  const clue = state.currentCity.clues[state.hintsUsed];
+  document.getElementById('clueDisplay').textContent = '💡 ' + clue;
+  document.getElementById('clueDisplay').classList.add('show');
+  state.hintsUsed++;
+  updateHintDots();
+}
+
+function updateHintDots() {
+  for (let i=1;i<=3;i++) {
+    document.getElementById('h'+i).classList.toggle('used', i <= state.hintsUsed);
+  }
+}
+
+/* ===================================================
+   ورودی حدس
+   =================================================== */
+let suggHighlight = -1;
+
+function onGuessInput() {
+  const q = document.getElementById('guessInput').value.trim().toLowerCase();
+  const suggBox = document.getElementById('suggestions');
+  if (!q) { suggBox.classList.remove('show'); return; }
+
+  const matches = ALL_COUNTRIES.filter(c =>
+    c[0].toLowerCase().includes(q) || c[1].includes(q)
+  ).slice(0, 8);
+
+  if (!matches.length) { suggBox.classList.remove('show'); return; }
+
+  suggBox.innerHTML = matches.map((c,i) =>
+    `<div class="sugg-item" onclick="selectCountry('${c[0]}','${c[1]}')"
+      onmouseover="highlightSugg(${i})" id="sugg_${i}">
+      <span>${c[1]}</span>
+      <span style="color:var(--text-muted);font-size:0.78rem;margin-right:auto">${c[0]}</span>
+    </div>`
+  ).join('');
+  suggBox.classList.add('show');
+  suggHighlight = -1;
+}
+
+function highlightSugg(i) {
+  suggHighlight = i;
+  document.querySelectorAll('.sugg-item').forEach((el,j) => {
+    el.classList.toggle('highlighted', j===i);
+  });
+}
+
+function onGuessKey(e) {
+  const items = document.querySelectorAll('.sugg-item');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    suggHighlight = Math.min(suggHighlight+1, items.length-1);
+    items.forEach((el,j) => el.classList.toggle('highlighted', j===suggHighlight));
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    suggHighlight = Math.max(suggHighlight-1, 0);
+    items.forEach((el,j) => el.classList.toggle('highlighted', j===suggHighlight));
+  } else if (e.key === 'Enter') {
+    if (suggHighlight >= 0 && items[suggHighlight]) {
+      items[suggHighlight].click();
+    } else {
+      submitGuess();
+    }
+  }
+}
+
+function selectCountry(en, fa) {
+  document.getElementById('guessInput').value = fa + ' (' + en + ')';
+  document.getElementById('suggestions').classList.remove('show');
+  document.getElementById('guessInput').dataset.selected = en;
+}
+
+/* ===================================================
+   ثبت حدس
+   =================================================== */
+function submitGuess() {
+  if (state.answered) return;
+  clearInterval(state.timerInterval);
+
+  let guessEn = document.getElementById('guessInput').dataset.selected || '';
+  if (!guessEn) {
+    // تلاش برای تطبیق دستی
+    const raw = document.getElementById('guessInput').value.trim().toLowerCase();
+    const match = ALL_COUNTRIES.find(c =>
+      c[0].toLowerCase() === raw || c[1] === raw.split('(')[0].trim()
+    );
+    if (match) guessEn = match[0];
+    else {
+      document.getElementById('guessInput').classList.add('shake');
+      setTimeout(() => document.getElementById('guessInput').classList.remove('shake'), 500);
+      document.getElementById('guessInput').style.borderColor = 'var(--danger)';
+      setTimeout(() => document.getElementById('guessInput').style.borderColor = '', 1000);
+      return;
+    }
+  }
+
+  state.answered = true;
+  evaluate(guessEn);
+  document.getElementById('guessInput').dataset.selected = '';
+}
+
+function evaluate(guessEn) {
+  const city = state.currentCity;
+  const correct = city.country;
+  const guessData = ALL_COUNTRIES.find(c => c[0] === guessEn) || [guessEn, guessEn, '?'];
+  const correctData = ALL_COUNTRIES.find(c => c[0] === correct) || [correct, correct, '?'];
+
+  let pts = 0, resultType = 'wrong';
+  const timeBonus = Math.round(state.timerVal / 30 * 30);
+
+  if (guessEn === correct) {
+    pts = 100 + timeBonus - state.hintsUsed * 10;
+    resultType = 'correct';
+    state.players[state.currentPlayer].rounds++;
+  } else {
+    // همسایه؟
+    const neighbors = NEIGHBORS[correct] || [];
+    if (neighbors.includes(guessEn)) {
+      pts = 40;
+      resultType = 'close';
+    } else if (guessData[2] === correctData[2]) {
+      // هم‌قاره
+      pts = 15;
+      resultType = 'close';
+    }
+  }
+
+  state.players[state.currentPlayer].pts += pts;
+  updateScoreUI();
+
+  // نمایش پین روی نقشه
+  showMapPin(correct, 'answer');
+  if (guessEn !== correct) showMapPin(guessEn, 'guess');
+
+  showResult(resultType, pts, correctData[1], guessData[1]);
+}
+
+/* ===================================================
+   نمایش نتیجه
+   =================================================== */
+function showResult(type, pts, correctFa='', guessFa='') {
+  const city = state.currentCity;
+  const overlay = document.getElementById('resultOverlay');
+  const emoji = document.getElementById('resultEmoji');
+  const title = document.getElementById('resultTitle');
+  const answer = document.getElementById('resultAnswer');
+  const ptsEl = document.getElementById('resultPoints');
+
+  if (type === 'correct') {
+    emoji.textContent = '🎉';
+    title.textContent = 'عالی بود!';
+    title.className = 'result-title correct';
+    answer.textContent = `پاسخ درست: ${correctFa}`;
+    playSound('correct');
+  } else if (type === 'close') {
+    emoji.textContent = '🤏';
+    title.textContent = 'نزدیک بود!';
+    title.className = 'result-title close';
+    answer.textContent = `حدست: ${guessFa} — پاسخ درست: ${correctFa}`;
+    playSound('close');
+  } else if (type === 'timeout') {
+    emoji.textContent = '⏰';
+    title.textContent = 'وقت تمام شد!';
+    title.className = 'result-title wrong';
+    const cf = ALL_COUNTRIES.find(c=>c[0]===city.country);
+    answer.textContent = `پاسخ درست: ${cf?cf[1]:city.country}`;
+    showMapPin(city.country, 'answer');
+    playSound('wrong');
+  } else {
+    emoji.textContent = '❌';
+    title.textContent = 'اشتباه!';
+    title.className = 'result-title wrong';
+    answer.textContent = `حدست: ${guessFa} — پاسخ درست: ${correctFa}`;
+    playSound('wrong');
+  }
+
+  ptsEl.innerHTML = '+' + toPersianNum(pts) + ' <span>امتیاز</span>';
+
+  const isLast = state.round >= state.totalRounds;
+  document.getElementById('nextBtn').textContent = isLast ? '🏆 نتیجه‌ی نهایی' : 'دور بعد ←';
+
+  // در حالت دو نفره نوبت را عوض کن
+  if (state.mode === 'duo' && !isLast) {
+    state.currentPlayer = 1 - state.currentPlayer;
+  }
+
+  overlay.classList.add('show');
+}
+
+/* ===================================================
+   پایان بازی
+   =================================================== */
+function showEnd() {
+  document.getElementById('resultOverlay').classList.remove('show');
+  const p1 = state.players[0], p2 = state.players[1];
+  let html = '';
+  if (state.mode === 'solo') {
+    html = `<div style="font-size:1.8rem;font-weight:900;color:var(--gold-light)">${toPersianNum(p1.pts)} امتیاز</div>
+    <div style="color:var(--text-muted);margin-top:8px">${toPersianNum(p1.rounds)} دور از ${toPersianNum(state.totalRounds)} درست</div>`;
+  } else {
+    const winner = p1.pts >= p2.pts ? p1 : p2;
+    html = `<div style="margin-bottom:12px;color:var(--gold-light);font-size:1.1rem">🏆 برنده: <strong>${winner.name}</strong></div>
+    <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap">
+      <div style="background:var(--bg-dark);border-radius:12px;padding:14px 20px;min-width:120px">
+        <div style="color:var(--text-muted);font-size:0.85rem">${p1.name}</div>
+        <div style="font-size:1.8rem;font-weight:900;color:var(--gold-light)">${toPersianNum(p1.pts)}</div>
+      </div>
+      <div style="background:var(--bg-dark);border-radius:12px;padding:14px 20px;min-width:120px">
+        <div style="color:var(--text-muted);font-size:0.85rem">${p2.name}</div>
+        <div style="font-size:1.8rem;font-weight:900;color:var(--gold-light)">${toPersianNum(p2.pts)}</div>
+      </div>
+    </div>`;
+  }
+  document.getElementById('endContent').innerHTML = html;
+  document.getElementById('endOverlay').classList.add('show');
+}
+
+function restartGame() {
+  document.getElementById('endOverlay').classList.remove('show');
+  state.players.forEach(p => { p.pts=0; p.rounds=0; });
+  state.round=0; state.currentPlayer=0; state.usedCities=[];
+  updateScoreUI();
+  clearCanvas();
+  nextRound();
+}
+
+function returnToMenu() {
+  clearInterval(state.timerInterval);
+  document.getElementById('screen-game').style.display = 'none';
+  document.getElementById('screen-intro').style.display = 'flex';
+  document.getElementById('mainHeader').style.display = 'none';
+  document.getElementById('resultOverlay').classList.remove('show');
+  document.getElementById('endOverlay').classList.remove('show');
+}
+
+/* ===================================================
+   Canvas - نقشه‌ی جهان
+   =================================================== */
+let mapCtx, mapW, mapH;
+let drawing = false;
+let mapPins = [];
+let geoData = null;
+let countryCoords = {}; // مختصات مرکز کشورها
+
+// مختصات تقریبی مرکز کشورها (lat, lon)
+const COUNTRY_CENTERS = {
+  "France":[46.2,2.2],"Italy":[41.9,12.6],"Germany":[51.2,10.5],"Spain":[40.5,-3.7],
+  "United Kingdom":[54,-2],"Greece":[39.1,21.8],"Poland":[52,19.5],"Ukraine":[49,32],
+  "Russia":[61,105],"Turkey":[39,35],"Sweden":[59.3,18.1],"Norway":[60.5,8.5],
+  "Finland":[61.9,25.7],"Portugal":[39.4,-8.2],"Romania":[45.9,24.9],"Bulgaria":[42.7,25.5],
+  "Hungary":[47,19.5],"Czech Republic":[49.8,15.5],"Austria":[47.5,14.5],"Switzerland":[46.8,8.2],
+  "Belgium":[50.5,4.5],"Netherlands":[52.4,5.3],"Denmark":[56.3,9.5],"Slovakia":[48.7,19.7],
+  "Croatia":[45.1,15.2],"Serbia":[44,21],"Bosnia and Herzegovina":[44,17.5],"Slovenia":[46.1,14.9],
+  "Albania":[41.2,20.2],"North Macedonia":[41.6,21.7],"Montenegro":[42.7,19.4],
+  "Estonia":[58.6,25.0],"Latvia":[56.9,24.6],"Lithuania":[55.2,23.9],"Moldova":[47.4,28.4],
+  "Belarus":[53.7,27.9],"Kosovo":[42.6,20.9],"Luxembourg":[49.8,6.1],"Malta":[35.9,14.4],
+  "Iceland":[64.9,-18.2],"Ireland":[53.2,-8.2],"Cyprus":[35.1,33.4],"Andorra":[42.5,1.5],
+  "China":[35.9,104.2],"Japan":[36.2,138.3],"India":[20.6,78.9],"South Korea":[35.9,127.8],
+  "North Korea":[40,127],"Pakistan":[30,69],"Bangladesh":[23.7,90.4],"Sri Lanka":[7.9,80.8],
+  "Nepal":[28.4,84.1],"Bhutan":[27.5,90.4],"Myanmar":[19.2,96.7],"Thailand":[15.9,100.9],
+  "Vietnam":[16.6,107.6],"Cambodia":[12.6,104.9],"Laos":[17.9,102.6],"Indonesia":[0.8,113.9],
+  "Philippines":[12.9,121.8],"Malaysia":[4.2,108.0],"Brunei":[4.5,114.7],
+  "Mongolia":[46.9,103.8],"Kazakhstan":[48.0,67.9],"Uzbekistan":[41.4,64.6],
+  "Turkmenistan":[39.0,59.6],"Kyrgyzstan":[41.2,74.8],"Tajikistan":[39.0,71.3],
+  "Afghanistan":[33.9,67.7],"Iran":[32.4,53.7],"Iraq":[33.2,43.7],"Syria":[34.8,38.9],
+  "Lebanon":[33.9,35.5],"Israel":[31.5,34.8],"Palestine":[31.9,35.3],"Jordan":[31.2,36.8],
+  "Saudi Arabia":[23.9,45.1],"Yemen":[15.6,48.5],"Oman":[21.5,55.9],
+  "United Arab Emirates":[24.5,54.2],"Qatar":[25.4,51.2],"Kuwait":[29.3,47.5],
+  "Bahrain":[26.0,50.6],"Georgia":[42.3,43.4],"Armenia":[40.1,45.0],"Azerbaijan":[40.5,47.6],
+  "Egypt":[26.8,30.8],"Libya":[26.3,17.2],"Tunisia":[33.9,9.5],"Morocco":[31.8,-7.1],
+  "Algeria":[28.0,2.6],"Sudan":[15.6,32.5],"South Sudan":[7.9,30.2],"Ethiopia":[9.1,40.5],
+  "Somalia":[5.2,46.2],"Eritrea":[15.2,39.8],"Djibouti":[11.8,42.6],"Kenya":[1.3,36.9],
+  "Tanzania":[6.4,34.9],"Uganda":[1.4,32.3],"Rwanda":[2.0,29.9],"Burundi":[3.4,29.9],
+  "Nigeria":[9.1,8.7],"Ghana":[7.9,-1.0],"Ivory Coast":[7.5,-5.6],"Senegal":[14.4,-14.5],
+  "Mali":[17.6,-2.0],"Burkina Faso":[12.4,-1.6],"Niger":[17.6,8.1],"Chad":[15.5,18.7],
+  "Cameroon":[3.9,11.5],"Congo":[0.2,15.8],"Gabon":[0.7,11.6],"Angola":[11.2,17.9],
+  "Zambia":[13.1,27.8],"Zimbabwe":[19.0,29.2],"Mozambique":[18.7,35.5],"Madagascar":[20.3,44.7],
+  "South Africa":[29.0,25.1],"Namibia":[22.0,17.1],"Botswana":[22.3,24.7],
+  "Sierra Leone":[8.5,-11.8],"Guinea":[10.7,-10.9],"Benin":[9.3,2.3],"Togo":[8.6,0.8],
+  "United States of America":[37.1,-95.7],"Canada":[56.1,-96.3],"Mexico":[23.6,-102.5],
+  "Guatemala":[15.8,-90.2],"Honduras":[15.2,-86.2],"El Salvador":[13.8,-88.9],
+  "Nicaragua":[12.9,-85.2],"Costa Rica":[9.7,-83.8],"Panama":[8.5,-80.8],
+  "Cuba":[21.5,-79.5],"Haiti":[18.9,-72.3],"Dominican Republic":[18.7,-70.2],
+  "Jamaica":[18.1,-77.3],"Brazil":[10.0,-53.2],"Colombia":[4.6,-74.3],
+  "Venezuela":[8.0,-66.6],"Peru":[10.0,-75.0],"Bolivia":[16.3,-63.6],
+  "Ecuador":[1.8,-78.2],"Paraguay":[23.4,-58.4],"Uruguay":[32.5,-55.8],
+  "Argentina":[34.0,-64.0],"Chile":[30.0,-71.0],"Guyana":[5.0,-59.0],
+  "Australia":[25.3,133.8],"New Zealand":[40.9,174.9],"Papua New Guinea":[6.3,143.8],
+  "Fiji":[17.7,178.1],"Taiwan":[23.7,120.9]
+};
+
+function initCanvas() {
+  const canvas = document.getElementById('worldMap');
+  const container = canvas.parentElement;
+  mapW = container.offsetWidth || 500;
+  mapH = Math.round(mapW * 0.55);
+  canvas.width = mapW;
+  canvas.height = mapH;
+  mapCtx = canvas.getContext('2d');
+
+  drawBaseMap();
+  setupCanvasEvents();
+}
+
+/* رسم نقشه‌ی پایه */
+function drawBaseMap() {
+  if (!mapCtx) return;
+  mapCtx.clearRect(0, 0, mapW, mapH);
+
+  // پس‌زمینه‌ی اقیانوس
+  mapCtx.fillStyle = '#0A2040';
+  mapCtx.fillRect(0, 0, mapW, mapH);
+
+  // رسم خطوط شبکه
+  mapCtx.strokeStyle = 'rgba(255,255,255,0.05)';
+  mapCtx.lineWidth = 0.5;
+  for (let lat=-80; lat<=80; lat+=20) {
+    const y = latToY(lat);
+    mapCtx.beginPath(); mapCtx.moveTo(0,y); mapCtx.lineTo(mapW,y); mapCtx.stroke();
+  }
+  for (let lon=-180; lon<=180; lon+=30) {
+    const x = lonToX(lon);
+    mapCtx.beginPath(); mapCtx.moveTo(x,0); mapCtx.lineTo(x,mapH); mapCtx.stroke();
+  }
+
+  // رسم قاره‌ها به صورت ساده‌شده
+  drawSimplifiedContinents();
+}
+
+/* تبدیل مختصات جغرافیایی به پیکسل */
+function lonToX(lon) { return ((lon + 180) / 360) * mapW; }
+function latToY(lat) { return ((90 - lat) / 180) * mapH; }
+function xyToLatLon(x, y) {
+  return { lon: (x / mapW) * 360 - 180, lat: 90 - (y / mapH) * 180 };
+}
+
+/* رسم قاره‌ها با پولیگون‌های ساده‌شده */
+function drawSimplifiedContinents() {
+  const ctx = mapCtx;
+  // خط ساحلی آمریکای شمالی
+  drawLandmass(ctx, [
+    [-165,72],[-140,70],[-130,55],[-125,49],[-95,49],[-85,45],[-82,42],[-74,45],[-67,47],
+    [-67,44],[-70,41],[-75,35],[-77,34],[-80,25],[-80,24],[-82,24],[-83,30],[-90,29],
+    [-97,25],[-97,26],[-105,20],[-107,23],[-118,32],[-122,37],[-125,49],[-130,55],
+    [-140,70],[-155,60],[-160,60],[-165,60],[-165,72]
+  ], '#2D5016');
+
+  // آمریکای مرکزی
+  drawLandmass(ctx, [
+    [-90,18],[-88,16],[-85,11],[-83,9],[-77,8],[-77,9],[-80,9],[-82,10],[-85,10],
+    [-86,13],[-89,15],[-92,17],[-90,18]
+  ], '#2D5016');
+
+  // آمریکای جنوبی
+  drawLandmass(ctx, [
+    [-75,12],[-65,11],[-63,10],[-62,11],[-60,6],[-52,4],[-50,0],[-48,-1],[-44,-2],
+    [-37,-10],[-35,-8],[-35,-9],[-37,-12],[-39,-17],[-40,-20],[-44,-23],[-45,-24],
+    [-48,-28],[-52,-33],[-55,-34],[-57,-38],[-60,-38],[-65,-42],[-66,-45],[-65,-50],
+    [-68,-54],[-70,-56],[-68,-56],[-65,-55],[-55,-54],[-54,-52],[-55,-46],[-57,-40],
+    [-60,-34],[-60,-30],[-58,-25],[-58,-20],[-60,-15],[-58,-11],[-60,-5],[-58,-2],
+    [-56,2],[-53,4],[-60,6],[-62,7],[-68,8],[-70,7],[-73,10],[-75,12]
+  ], '#2D5016');
+
+  // اروپا
+  drawLandmass(ctx, [
+    [-10,36],[-9,38],[-8,37],[-5,36],[-2,38],[0,39],[3,40],[5,43],[7,44],[10,44],
+    [12,46],[14,46],[16,48],[18,48],[20,49],[22,49],[24,47],[26,46],[28,45],[30,46],
+    [32,47],[28,68],[25,70],[20,69],[15,69],[10,63],[5,62],[5,58],[8,55],[9,57],[10,57],
+    [12,56],[12,57],[10,58],[8,58],[5,58],[5,55],[8,54],[10,55],[12,55],[14,54],[16,54],
+    [18,55],[20,54],[22,54],[24,55],[24,57],[22,57],[20,56],[18,57],[16,58],[14,59],
+    [12,60],[10,60],[8,62],[6,62],[5,58],[0,52],[-5,48],[-5,44],[-9,44],[-10,38],
+    [-8,36],[-5,36],[0,36],[-10,36]
+  ], '#1E6B2F');
+
+  // اسکاندیناوی
+  drawLandmass(ctx, [
+    [5,58],[5,60],[6,62],[8,62],[10,60],[12,60],[14,59],[16,60],[18,60],[20,58],
+    [22,56],[24,57],[26,57],[28,70],[25,70],[20,69],[15,69],[12,66],[10,63],[8,60],[5,58]
+  ], '#1E6B2F');
+
+  // آفریقا
+  drawLandmass(ctx, [
+    [-5,35],[-5,30],[0,30],[5,30],[10,30],[15,30],[20,30],[25,30],[30,28],[32,28],
+    [35,20],[38,16],[42,11],[44,11],[42,8],[40,5],[38,0],[40,-2],[38,-5],[36,-10],
+    [35,-18],[34,-22],[32,-26],[28,-30],[26,-34],[20,-34],[18,-33],[16,-30],[14,-22],
+    [12,-16],[10,-10],[10,-5],[8,0],[5,4],[2,4],[0,5],[-2,5],[-5,5],[-8,4],[-12,5],
+    [-14,9],[-16,12],[-15,15],[-14,17],[-12,20],[-10,24],[-8,28],[-5,32],[-5,35]
+  ], '#1A4D20');
+
+  // آسیا
+  drawLandmass(ctx, [
+    [26,46],[28,45],[34,46],[36,47],[38,48],[42,47],[44,46],[48,46],[52,44],[55,43],
+    [58,42],[60,44],[62,46],[65,46],[70,45],[75,44],[80,46],[85,48],[90,50],[92,52],
+    [95,52],[100,50],[105,52],[110,53],[115,53],[118,50],[120,50],[125,50],[130,48],
+    [132,46],[135,44],[135,36],[130,33],[127,35],[122,32],[120,28],[118,24],[115,22],
+    [112,20],[110,20],[108,15],[105,11],[104,10],[102,4],[100,2],[102,-2],[104,-4],
+    [108,-7],[112,-8],[115,-8],[120,-10],[125,-10],[130,-8],[132,-8],[133,-6],[135,-5],
+    [137,-4],[140,-6],[142,-5],[145,-5],[148,-6],[150,-5],[148,-10],[144,-8],[140,-10],
+    [138,-5],[136,-4],[132,-5],[128,-8],[125,-10],[122,-10],[118,-8],[115,-8],[112,-10],
+    [108,-8],[105,-6],[102,-2],[100,2],[98,6],[96,8],[94,10],[92,12],[90,14],[88,16],
+    [86,20],[84,22],[82,22],[80,24],[78,28],[76,30],[74,32],[72,36],[68,36],[66,38],
+    [62,38],[60,38],[58,38],[55,38],[52,40],[50,40],[48,38],[45,38],[42,38],[40,38],
+    [38,38],[36,38],[34,36],[34,32],[36,30],[38,28],[40,26],[42,24],[44,22],[46,20],
+    [48,18],[46,15],[44,12],[42,11],[44,11],[50,14],[52,16],[54,18],[56,22],[60,24],
+    [62,24],[65,22],[68,22],[70,20],[72,22],[72,24],[74,26],[76,28],[78,28],[80,24],
+    [82,22],[84,20],[86,22],[88,20],[90,22],[92,22],[94,22],[96,20],[98,16],[100,6],
+    [102,4],[104,2],[105,-2],[108,-4],[110,-8],[113,-8],[114,-4],[116,-2],[118,2],
+    [120,4],[122,6],[124,8],[127,10],[130,12],[132,14],[134,14],[137,12],[140,10],
+    [142,12],[145,15],[148,20],[150,20],[152,15],[150,10],[148,5],[145,2],[142,2],
+    [140,5],[138,8],[136,8],[134,6],[132,4],[130,0],[128,-5],[125,-8],
+    // ادامه به سمت شمال شرق
+    [140,40],[142,46],[144,48],[146,48],[148,50],[152,52],[155,55],[158,55],[160,60],
+    [165,62],[168,65],[168,72],[160,72],[155,72],[150,72],[145,72],[140,72],[135,72],
+    [130,72],[125,72],[120,72],[115,70],[110,70],[105,68],[100,66],[95,66],[90,68],
+    [85,68],[80,68],[75,70],[70,70],[65,70],[60,68],[55,66],[52,66],[48,65],[44,64],
+    [40,62],[38,62],[36,62],[34,60],[32,58],[30,58],[28,58],[26,56],[24,56],[22,56],
+    [20,57],[18,57],[16,58],[14,58],[12,56],[10,55],[8,54],[8,56],[10,57],[12,58],
+    [14,59],[18,60],[20,59],[22,56],[24,55],[26,55],[28,55],[30,56],[32,58],[34,58],
+    [36,57],[38,58],[40,60],[42,60],[44,58],[46,58],[48,60],[50,60],[52,60],[55,62],
+    [58,62],[60,62],[65,65],[70,65],[75,65],[80,68],[85,68],[90,68],[95,66],[100,66],
+    [105,68],[110,70],[120,72],[135,72],[145,72],[150,70],[160,70],[168,70],[170,68],
+    [172,66],[170,65],[168,65],[165,62],[160,60],[155,56],[152,52],[148,50],[146,48],
+    [142,46],[140,40],[135,35],[132,30],[130,28],[127,28],[126,30],[124,32],[122,32],
+    [120,30],[118,28],[116,24],[114,22],[112,22],[110,22],[108,18],[106,14],[104,10],
+    [102,6],[100,2],[98,2],[96,0],[95,-2],[98,-4],[100,-6],[103,-8],[105,-6],[108,-4],
+    [112,-4],[115,-4],[118,-2],[120,-2],[122,0],[124,0],[126,-2],[128,-4],[130,-2],
+    [133,-4],[135,-5],[138,-4],[140,-6],[142,-5],[145,-5],[148,-8],[150,-6],[152,-5],
+    [155,-6],[158,-6],[160,-4],[165,-4],[170,-4],[175,-4],[180,-4],
+    [180,5],[175,5],[170,5],[165,5],[160,5],[155,6],[150,6],[145,6],[140,8],[138,10],
+    [136,10],[134,12],[130,14],[126,12],[122,10],[120,8],[118,6],[116,4],[114,2],
+    [112,2],[108,4],[106,6],[104,8],[102,8],[100,6],[98,8],[96,10],[95,14],[94,16],
+    [92,16],[90,18],[88,20],[86,20],[84,22],[82,22],[80,24],[78,26],[76,28],
+    [26,46]
+  ], '#155724', false);
+
+  // رسم آسیا ساده‌تر
+  drawAsiaSimple(ctx);
+
+  // استرالیا
+  drawLandmass(ctx, [
+    [114,-22],[116,-20],[118,-18],[120,-18],[122,-18],[124,-17],[126,-15],[128,-14],
+    [130,-12],[132,-12],[134,-13],[136,-14],[138,-14],[140,-15],[142,-18],[144,-18],
+    [146,-18],[148,-20],[150,-22],[152,-25],[152,-28],[150,-30],[150,-34],[148,-38],
+    [148,-40],[146,-40],[144,-38],[142,-38],[140,-36],[138,-35],[136,-36],[134,-36],
+    [132,-34],[130,-34],[128,-32],[126,-32],[124,-30],[122,-28],[120,-26],[118,-24],
+    [116,-24],[114,-24],[114,-22]
+  ], '#1A4D20');
+
+  // نیوزلند
+  drawLandmass(ctx, [
+    [172,-34],[174,-35],[176,-37],[178,-38],[178,-40],[176,-42],[174,-44],[172,-44],
+    [170,-44],[168,-46],[168,-44],[170,-42],[172,-40],[173,-38],[172,-36],[172,-34]
+  ], '#1A4D20');
+
+  // ژاپن
+  drawLandmass(ctx, [
+    [130,31],[131,32],[132,34],[134,35],[136,36],[138,37],[140,38],[142,40],[143,42],
+    [144,44],[143,44],[141,42],[139,40],[137,38],[136,36],[134,34],[132,33],[130,31]
+  ], '#1E6B2F');
+
+  // جزیره‌های اندونزی
+  drawLandmass(ctx, [
+    [95,5],[98,4],[102,2],[104,0],[105,-2],[106,-6],[108,-6],[110,-8],[113,-8],[115,-5],
+    [116,-2],[118,0],[120,-2],[122,-2],[124,-4],[126,-5],[127,-4],[128,-3],[130,-2],
+    [132,-4],[134,-6],[134,-8],[132,-8],[130,-6],[128,-5],[126,-5],[124,-6],[122,-4],
+    [120,-4],[118,-4],[115,-4],[112,-6],[108,-7],[105,-6],[103,-5],[100,-2],[98,2],
+    [95,5]
+  ], '#155724');
+
+  // گرینلند
+  drawLandmass(ctx, [
+    [-48,70],[-44,68],[-42,66],[-38,64],[-36,64],[-24,65],[-18,68],[-16,72],[-20,76],
+    [-26,80],[-36,84],[-42,84],[-48,82],[-52,78],[-52,74],[-48,70]
+  ], '#2D5016');
+
+  // جزیره‌های انگلیس
+  drawLandmass(ctx, [
+    [-6,50],[-5,50],[-3,50],[0,51],[2,53],[0,55],[-2,56],[-4,57],[-6,58],[-6,56],
+    [-5,54],[-3,52],[-3,50],[-6,50]
+  ], '#1E6B2F');
+
+  // ایسلند
+  drawLandmass(ctx, [
+    [-24,64],[-22,63],[-18,63],[-14,65],[-14,66],[-16,68],[-20,66],[-24,64]
+  ], '#1E6B2F');
+}
+
+function drawAsiaSimple(ctx) {
+  // آسیا - رسم ساده‌شده
+  const regions = [
+    // خاورمیانه
+    [[28,30],[36,30],[42,24],[46,20],[52,16],[52,22],[48,28],[44,36],[40,38],[36,38],[34,36],[28,30]],
+    // آسیای مرکزی
+    [[50,40],[60,44],[70,44],[75,40],[80,40],[80,36],[75,35],[70,36],[65,36],[60,38],[55,38],[50,40]],
+    // شبه‌قاره‌ی هند
+    [[62,24],[68,24],[72,22],[72,20],[74,18],[76,14],[78,10],[80,8],[82,6],[80,8],[78,10],[76,12],
+     [74,14],[72,18],[70,22],[68,24],[65,22],[62,24]],
+    // چین و شرق آسیا
+    [[75,40],[80,46],[90,48],[100,50],[105,50],[110,50],[115,48],[120,48],[125,48],[130,46],
+     [132,45],[135,40],[135,35],[130,30],[127,30],[124,32],[120,30],[118,24],[115,22],
+     [112,20],[108,18],[106,14],[104,12],[102,8],[100,6],[98,4],[96,2],[95,2],[98,-2],
+     [100,-5],[103,-8],[104,-6],[108,-4],[112,-4],[114,-2],[116,0],[118,2],[120,5],[125,8],
+     [128,8],[130,12],[132,14],[134,14],[138,12],[140,10],[142,12],[145,14],[148,18],
+     [150,18],[150,14],[148,10],[145,8],[142,6],[140,5],[138,8],[135,8],[132,5],[130,2],
+     [128,-2],[125,-5],[120,-8],[115,-5],[110,-8],[106,-6],[102,-2],[100,2],[98,5],[96,8],
+     [95,14],[92,12],[90,14],[88,18],[86,22],[84,22],[82,22],[80,24],[78,28],[76,30],
+     [74,32],[70,36],[65,36],[60,38],[55,40],[52,44],[48,46],[44,47],[40,47],[36,47],
+     [32,47],[28,48],[26,47],[26,45],[28,44],[32,44],[36,46],[40,46],[44,46],[48,44],
+     [52,42],[55,40],[60,40],[65,38],[70,38],[75,40]]
+  ];
+  regions.forEach(pts => drawLandmass(ctx, pts, '#155724'));
+}
+
+function drawLandmass(ctx, coords, color, close=true) {
+  if (!coords || coords.length < 3) return;
+  ctx.beginPath();
+  ctx.moveTo(lonToX(coords[0][0]), latToY(coords[0][1]));
+  for (let i=1; i<coords.length; i++) {
+    ctx.lineTo(lonToX(coords[i][0]), latToY(coords[i][1]));
+  }
+  if (close) ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+  ctx.lineWidth = 0.5;
+  ctx.stroke();
+}
+
+/* ===== پین‌های نقشه ===== */
+function showMapPin(countryEn, type) {
+  const canvas = document.getElementById('worldMap');
+  const rect = canvas.getBoundingClientRect();
+  const coords = COUNTRY_CENTERS[countryEn];
+  if (!coords) return;
+
+  const x = lonToX(coords[1]);
+  const y = latToY(coords[0]);
+
+  // رسم پین روی Canvas
+  const ctx = mapCtx;
+  ctx.save();
+  if (type === 'answer') {
+    ctx.fillStyle = '#2ECC71';
+    ctx.strokeStyle = '#fff';
+    ctx.shadowColor = '#2ECC71';
+  } else {
+    ctx.fillStyle = '#E74C3C';
+    ctx.strokeStyle = '#fff';
+    ctx.shadowColor = '#E74C3C';
+  }
+  ctx.shadowBlur = 8;
+  ctx.beginPath();
+  ctx.arc(x, y, 7, 0, Math.PI*2);
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // برچسب
+  ctx.shadowBlur = 4;
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 11px Vazirmatn, Tahoma, sans-serif';
+  ctx.textAlign = 'center';
+  const label = type==='answer' ? '✓' : '✗';
+  ctx.fillText(label, x, y+4);
+  ctx.restore();
+
+  mapPins.push({x, y, type});
+}
+
+function clearMapPins() {
+  mapPins = [];
+  drawBaseMap();
+}
+
+/* ===== رویدادهای Canvas ===== */
+let isPointerDown = false;
+let lastX = 0, lastY = 0;
+
+function setupCanvasEvents() {
+  const canvas = document.getElementById('worldMap');
+
+  canvas.addEventListener('pointerdown', e => {
+    isPointerDown = true;
+    const {x,y} = getCanvasPos(e, canvas);
+    lastX = x; lastY = y;
+
+    if (!state.drawMode) {
+      handleMapClick(x, y);
+    }
+  });
+
+  canvas.addEventListener('pointermove', e => {
+    if (!isPointerDown || !state.drawMode) return;
+    const {x,y} = getCanvasPos(e, canvas);
+    mapCtx.beginPath();
+    mapCtx.strokeStyle = state.drawColor;
+    mapCtx.lineWidth = 3;
+    mapCtx.lineCap = 'round';
+    mapCtx.moveTo(lastX, lastY);
+    mapCtx.lineTo(x, y);
+    mapCtx.stroke();
+    lastX = x; lastY = y;
+  });
+
+  canvas.addEventListener('pointerup', () => { isPointerDown = false; });
+  canvas.addEventListener('pointerleave', () => { isPointerDown = false; });
+}
+
+function getCanvasPos(e, canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  return {
+    x: (e.clientX - rect.left) * scaleX,
+    y: (e.clientY - rect.top) * scaleY
+  };
+}
+
+function handleMapClick(x, y) {
+  if (state.answered) return;
+  const ll = xyToLatLon(x, y);
+
+  // یافتن نزدیک‌ترین کشور
+  let closest = null, minDist = Infinity;
+  for (const [en, cc] of Object.entries(COUNTRY_CENTERS)) {
+    const dx = lonToX(cc[1]) - x;
+    const dy = latToY(cc[0]) - y;
+    const d = Math.sqrt(dx*dx + dy*dy);
+    if (d < minDist) { minDist = d; closest = en; }
+  }
+
+  if (closest && minDist < mapW * 0.12) {
+    // پر کردن فیلد حدس
+    const data = ALL_COUNTRIES.find(c => c[0]===closest);
+    if (data) {
+      document.getElementById('guessInput').value = data[1] + ' (' + data[0] + ')';
+      document.getElementById('guessInput').dataset.selected = data[0];
+      document.getElementById('mapStatus').textContent = '✅ ' + data[1] + ' انتخاب شد';
+      // نمایش دایره‌ی کلیک
+      mapCtx.beginPath();
+      mapCtx.arc(x, y, 5, 0, Math.PI*2);
+      mapCtx.fillStyle = 'rgba(201,168,76,0.6)';
+      mapCtx.fill();
+    }
+  }
+}
+
+function toggleDrawMode() {
+  state.drawMode = !state.drawMode;
+  const btn = document.getElementById('drawModeBtn');
+  const canvas = document.getElementById('worldMap');
+  if (state.drawMode) {
+    btn.style.background = 'rgba(201,168,76,0.2)';
+    btn.style.borderColor = 'var(--gold)';
+    btn.style.color = 'var(--gold-light)';
+    canvas.style.cursor = 'crosshair';
+    document.getElementById('mapStatus').textContent = '🖊 حالت نقاشی فعال';
+  } else {
+    btn.style.background = '';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+    canvas.style.cursor = 'crosshair';
+    document.getElementById('mapStatus').textContent = 'برای حدس روی کشور کلیک کن';
+  }
+}
+
+function setColor(color, el) {
+  state.drawColor = color;
+  document.querySelectorAll('.draw-color-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function clearCanvas() {
+  drawBaseMap();
+  mapPins.forEach(p => {
+    // بازرسم پین‌ها
+    mapCtx.beginPath();
+    mapCtx.arc(p.x, p.y, 7, 0, Math.PI*2);
+    mapCtx.fillStyle = p.type==='answer' ? '#2ECC71' : '#E74C3C';
+    mapCtx.fill();
+  });
+}
+
+/* ===================================================
+   ابزارهای کمکی
+   =================================================== */
+const persianNums = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+function toPersianNum(n) {
+  return String(n).replace(/[0-9]/g, d => persianNums[+d]);
+}
+
+/* ===================================================
+   مقداردهی اولیه
+   =================================================== */
+window.addEventListener('resize', () => {
+  if (document.getElementById('screen-game').style.display !== 'none') {
+    const canvas = document.getElementById('worldMap');
+    const container = canvas.parentElement;
+    const oldW = mapW;
+    mapW = container.offsetWidth || mapW;
+    mapH = Math.round(mapW * 0.55);
+    canvas.width = mapW;
+    canvas.height = mapH;
+    drawBaseMap();
+    // بازرسم پین‌ها
+    mapPins.forEach(p => {
+      const scale = mapW / oldW;
+      p.x *= scale; p.y *= scale;
+      mapCtx.beginPath();
+      mapCtx.arc(p.x, p.y, 7, 0, Math.PI*2);
+      mapCtx.fillStyle = p.type==='answer' ? '#2ECC71' : '#E74C3C';
+      mapCtx.fill();
+    });
+  }
+});
+
+// نمایش اولیه
+document.getElementById('soloNameWrap').style.display = 'block';
+</script>
+</body>
+</html>
