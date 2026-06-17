@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>تخته‌باز | Tabbeh-Baz</title>
+<style>
+  /* ===================== توکن‌های طراحی (رنگ، فاصله، ...) ===================== */
+  :root{
+    --bg-1:#060818;
+    --bg-2:#0b1230;
+    --bg-3:#121a44;
+    --gold:#d4af37;
+    --gold-bright:#f3d670;
+    --gold-dim:rgba(212,175,55,.28);
+    --blue:#2f6fed;
+    --blue-light:#7eb0ff;
+    --blue-glow:rgba(47,111,237,.55);
+    --red:#e0395a;
+    --red-light:#ff8a9c;
+    --red-glow:rgba(224,57,90,.55);
+    --panel:rgba(16,22,50,.72);
+    --panel-2:rgba(22,29,62,.85);
+    --border:rgba(212,175,55,.22);
+    --text:#eef1ff;
+    --text-dim:#9aa3cf;
+    --success:#3ddc97;
+    --warning:#f5b942;
+    --danger:#ef4862;
+    --radius:14px;
+    --shadow-soft:0 10px 30px rgba(0,0,0,.45);
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; min-height:100%; }
+  body{
+    font-family:'Vazirmatn','IRANSans',Tahoma,Arial,sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(circle at 15% 10%, rgba(212,175,55,.08), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(47,111,237,.10), transparent 45%),
+      linear-gradient(160deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+    min-height:100vh;
+    direction:rtl;
+    line-height:1.6;
+    padding-bottom:30px;
+  }
+  .hidden{ display:none !important; }
+  button{ font-family:inherit; cursor:pointer; border:none; }
+  input{ font-family:inherit; }
+
+  /* ===================== هدر ===================== */
+  header.app-header{
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:10px;
+    padding:18px 26px;
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(255,255,255,.02), transparent);
+  }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand .logo-dice{ font-size:30px; filter:drop-shadow(0 0 10px var(--gold-dim)); }
+  .brand h1{
+    margin:0; font-size:26px; font-weight:800; letter-spacing:.5px;
+    background:linear-gradient(90deg, var(--gold-bright), var(--gold) 60%, #fff3c4);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .brand .sub{ margin:0; font-size:12px; color:var(--text-dim); letter-spacing:1px; }
+  .mini-stats{
+    display:flex; gap:8px; font-size:13px; color:var(--text-dim);
+    background:var(--panel); border:1px solid var(--border); border-radius:999px; padding:7px 16px;
+  }
+  .mini-stats b{ color:var(--gold-bright); margin-inline-start:4px; }
+
+  main{ max-width:1180px; margin:0 auto; padding:24px 18px; }
+
+  /* ===================== کارت‌های عمومی ===================== */
+  .panel-block{
+    background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+    padding:16px 18px; backdrop-filter:blur(6px);
+  }
+  .panel-block h4{ margin:0 0 10px; font-size:14px; color:var(--gold-bright); display:flex; align-items:center; gap:6px; }
+
+  .btn{
+    padding:12px 22px; border-radius:10px; font-size:15px; font-weight:700;
+    transition:transform .15s ease, box-shadow .25s ease, opacity .2s; letter-spacing:.3px;
+  }
+  .btn:active{ transform:scale(.96); }
+  .btn-gold{ background:linear-gradient(135deg, var(--gold-bright), var(--gold)); color:#231a02; box-shadow:0 6px 18px rgba(212,175,55,.35); }
+  .btn-gold:hover{ box-shadow:0 8px 26px rgba(212,175,55,.55); }
+  .btn-blue{ background:linear-gradient(135deg, var(--blue-light), var(--blue)); color:#06122c; box-shadow:0 6px 18px rgba(47,111,237,.35); }
+  .btn-blue:hover{ box-shadow:0 8px 26px rgba(47,111,237,.55); }
+  .btn-ghost{ background:transparent; color:var(--text-dim); border:1px solid var(--border); }
+  .btn-ghost:hover{ color:var(--text); }
+  .btn-danger-outline{ background:transparent; border:1px solid var(--danger); color:var(--red-light); border-radius:10px; padding:9px 16px; font-weight:700; font-size:13px; }
+  .btn-danger-outline:hover{ background:rgba(239,72,98,.12); }
+  .btn:disabled{ opacity:.45; cursor:not-allowed; }
+
+  /* ===================== صفحه لابی ===================== */
+  .screen{ animation:fade-in .35s ease; }
+  @keyframes fade-in{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
+
+  .lobby-card{ max-width:880px; margin:0 auto; display:flex; flex-direction:column; gap:20px; }
+  .field-label{ font-size:13px; color:var(--text-dim); display:block; margin-bottom:6px; }
+  #name-input{
+    width:100%; max-width:320px; padding:12px 14px; border-radius:10px; border:1px solid var(--border);
+    background:var(--panel-2); color:var(--text); font-size:15px;
+  }
+  #name-input:focus{ outline:2px solid var(--gold-dim); }
+
+  .lobby-options{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .option-card{
+    background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+    padding:20px; display:flex; flex-direction:column; gap:10px;
+  }
+  .option-card h3{ margin:0; font-size:17px; }
+  .option-card p{ margin:0; font-size:13px; color:var(--text-dim); flex:1; }
+  .code-input{
+    width:100%; padding:11px 14px; border-radius:10px; border:1px solid var(--border);
+    background:var(--panel-2); color:var(--gold-bright); font-size:18px; letter-spacing:4px;
+    text-align:center; text-transform:uppercase; font-weight:800;
+  }
+  .code-input:focus{ outline:2px solid var(--gold-dim); }
+
+  .room-status-panel{
+    background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:22px;
+    text-align:center; display:flex; flex-direction:column; align-items:center; gap:14px;
+  }
+  .room-code-display{
+    font-size:34px; font-weight:800; letter-spacing:8px; color:var(--gold-bright);
+    background:rgba(212,175,55,.08); border:1px dashed var(--gold-dim); border-radius:12px; padding:10px 26px;
+  }
+  .spinner{
+    width:22px; height:22px; border-radius:50%; border:3px solid var(--gold-dim); border-top-color:var(--gold-bright);
+    animation:spin 1s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .waiting-row{ display:flex; align-items:center; gap:10px; color:var(--text-dim); font-size:14px; }
+
+  .players-slot-row{ display:flex; gap:14px; justify-content:center; }
+  .player-slot{
+    display:flex; align-items:center; gap:8px; padding:8px 16px; border-radius:999px;
+    background:var(--panel-2); border:1px solid var(--border); font-size:13px;
+  }
+  .player-slot .dot{ width:10px; height:10px; border-radius:50%; }
+  .player-slot.blue .dot{ background:var(--blue-light); box-shadow:0 0 8px var(--blue-glow); }
+  .player-slot.red .dot{ background:var(--red-light); box-shadow:0 0 8px var(--red-glow); }
+  .player-slot.empty{ opacity:.45; }
+
+  .stats-panel{ text-align:center; }
+  #stats-display{ display:flex; justify-content:center; gap:22px; font-size:14px; }
+  #stats-display .stat b{ display:block; font-size:20px; color:var(--gold-bright); }
+
+  details.rules-toggle{ background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px; }
+  details.rules-toggle summary{ cursor:pointer; font-weight:700; color:var(--gold-bright); }
+  details.rules-toggle p, details.rules-toggle ul{ font-size:13.5px; color:var(--text-dim); }
+
+  .hint-text{ font-size:12px; color:var(--text-dim); text-align:center; }
+
+  /* ===================== صفحه بازی ===================== */
+  .game-topbar{
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+    padding:12px 18px; margin-bottom:18px;
+  }
+  .room-badge{ font-size:12px; color:var(--text-dim); background:var(--panel-2); padding:6px 12px; border-radius:999px; }
+  .room-badge span{ color:var(--gold-bright); font-weight:700; letter-spacing:2px; }
+  .turn-indicator{ display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700; flex:1; }
+  .turn-indicator .dot{ width:12px; height:12px; border-radius:50%; }
+  .turn-indicator.blue .dot{ background:var(--blue-light); box-shadow:0 0 10px var(--blue-glow); animation:pulse-dot 1.4s infinite; }
+  .turn-indicator.red .dot{ background:var(--red-light); box-shadow:0 0 10px var(--red-glow); animation:pulse-dot 1.4s infinite; }
+  @keyframes pulse-dot{ 0%,100%{ opacity:1; } 50%{ opacity:.45; } }
+  .timer-wrap{ display:flex; align-items:center; gap:8px; min-width:140px; }
+  .timer-bar-bg{ width:100px; height:8px; border-radius:6px; background:rgba(255,255,255,.08); overflow:hidden; }
+  #timer-bar{ height:100%; width:100%; background:linear-gradient(90deg, var(--gold), var(--gold-bright)); transition:width .25s linear, background .3s; }
+  #timer-text{ font-size:13px; color:var(--text-dim); min-width:54px; }
+
+  .game-main{ display:flex; gap:18px; align-items:flex-start; }
+  .board-area{ flex:1.5; min-width:0; }
+  .scoreboard{ display:flex; justify-content:center; gap:14px; margin-bottom:12px; }
+  .score-chip{
+    display:flex; align-items:center; gap:8px; padding:7px 16px; border-radius:999px; font-weight:700; font-size:14px;
+    background:var(--panel-2); border:1px solid var(--border);
+  }
+  .score-chip .dot{ width:10px; height:10px; border-radius:50%; }
+  .score-chip.blue .dot{ background:var(--blue-light); box-shadow:0 0 8px var(--blue-glow); }
+  .score-chip.red .dot{ background:var(--red-light); box-shadow:0 0 8px var(--red-glow); }
+
+  #board{
+    width:100%; max-width:560px; margin:0 auto; aspect-ratio:1/1;
+    display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr);
+    border-radius:12px; overflow:hidden; border:2px solid var(--border);
+    box-shadow:var(--shadow-soft); transition:box-shadow .3s;
+  }
+  #board.your-turn{ box-shadow:0 0 0 3px var(--gold-dim), var(--shadow-soft); }
+  #board.shake{ animation:shake .4s; }
+  @keyframes shake{
+    10%,90%{ transform:translateX(-2px); } 20%,80%{ transform:translateX(3px); }
+    30%,50%,70%{ transform:translateX(-6px); } 40%,60%{ transform:translateX(6px); }
+  }
+  .cell{ position:relative; display:flex; align-items:center; justify-content:center; }
+  .cell.dark{ background:#0c1130; }
+  .cell.light{ background:#1a234e; }
+  .cell.valid-move::after{
+    content:''; position:absolute; width:22%; height:22%; border-radius:50%;
+    background:var(--gold-bright); box-shadow:0 0 10px var(--gold-bright);
+    animation:valid-pulse 1.1s infinite;
+  }
+  @keyframes valid-pulse{ 0%,100%{ opacity:.45; transform:scale(.85); } 50%{ opacity:1; transform:scale(1.15); } }
+  .piece{
+    width:72%; height:72%; border-radius:50%; cursor:pointer;
+    animation:pop-in .25s ease;
+    box-shadow:inset 0 -4px 8px rgba(0,0,0,.35), inset 0 4px 6px rgba(255,255,255,.25);
+  }
+  @keyframes pop-in{ from{ transform:scale(0); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  .piece.blue{ background:radial-gradient(circle at 35% 30%, var(--blue-light), var(--blue) 70%); box-shadow:0 0 12px var(--blue-glow), inset 0 -4px 8px rgba(0,0,0,.3); }
+  .piece.red{ background:radial-gradient(circle at 35% 30%, var(--red-light), var(--red) 70%); box-shadow:0 0 12px var(--red-glow), inset 0 -4px 8px rgba(0,0,0,.3); }
+  .piece.selected{ animation:pulse-select 1s infinite; }
+  @keyframes pulse-select{ 0%,100%{ box-shadow:0 0 0 0 var(--gold-bright); } 50%{ box-shadow:0 0 0 6px var(--gold-dim); } }
+
+  /* ===================== پنل کناری: تاریخچه + چت ===================== */
+  .side-panel{ flex:1; min-width:280px; display:flex; flex-direction:column; gap:14px; }
+  .history-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; max-height:140px; overflow-y:auto; }
+  .history-list li{ font-size:12.5px; color:var(--text-dim); border-right:2px solid var(--gold-dim); padding-right:8px; }
+  .history-list li.system{ color:var(--gold-bright); font-style:italic; }
+
+  .chat-block{ display:flex; flex-direction:column; }
+  .chat-messages{
+    height:200px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;
+    padding:6px 2px; margin-bottom:8px;
+  }
+  .chat-msg{ max-width:85%; padding:7px 12px; border-radius:12px; font-size:13px; line-height:1.5; }
+  .chat-msg.mine{ align-self:flex-start; background:linear-gradient(135deg, var(--blue), #1c4fc0); color:#fff; }
+  .chat-msg.theirs{ align-self:flex-end; background:linear-gradient(135deg, var(--red), #a32140); color:#fff; }
+  .chat-msg.system{ align-self:center; color:var(--gold-bright); font-size:11.5px; font-style:italic; background:none; }
+  .chat-msg .meta{ display:block; font-size:10px; opacity:.7; margin-top:2px; }
+  .chat-msg.sticker{ font-size:30px; padding:2px 6px; background:none; }
+
+  .sticker-row{ display:flex; gap:6px; margin-bottom:6px; flex-wrap:wrap; }
+  .sticker-row button{ background:var(--panel-2); border:1px solid var(--border); border-radius:8px; font-size:18px; padding:4px 8px; }
+  .sticker-row button:hover{ background:var(--gold-dim); }
+
+  .chat-input-row{ display:flex; gap:6px; align-items:center; position:relative; }
+  #chat-input{
+    flex:1; padding:10px 12px; border-radius:10px; border:1px solid var(--border);
+    background:var(--panel-2); color:var(--text); font-size:13px;
+  }
+  .btn-icon{ background:var(--panel-2); border:1px solid var(--border); border-radius:10px; width:38px; height:38px; font-size:16px; color:var(--text); }
+  .btn-icon.send{ background:linear-gradient(135deg, var(--gold-bright), var(--gold)); color:#231a02; }
+  .emoji-picker{
+    position:absolute; bottom:46px; right:0; background:var(--panel-2); border:1px solid var(--border);
+    border-radius:10px; padding:8px; display:grid; grid-template-columns:repeat(6,1fr); gap:4px; z-index:5;
+  }
+  .emoji-picker button{ background:none; font-size:18px; padding:4px; border-radius:6px; }
+  .emoji-picker button:hover{ background:var(--gold-dim); }
+
+  /* ===================== نوتیفیکیشن (toast) ===================== */
+  .toast-container{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; gap:8px; z-index:100; align-items:center; }
+  .toast{
+    padding:11px 22px; border-radius:10px; font-size:13.5px; font-weight:600; color:#fff;
+    box-shadow:var(--shadow-soft); animation:toast-in .3s ease;
+    border:1px solid rgba(255,255,255,.15);
+  }
+  @keyframes toast-in{ from{ opacity:0; transform:translateY(16px); } to{ opacity:1; transform:translateY(0); } }
+  .toast.info{ background:linear-gradient(135deg,#2f6fed,#1c4fc0); }
+  .toast.success{ background:linear-gradient(135deg,#2bb673,#1a7a4d); }
+  .toast.warning{ background:linear-gradient(135deg,#f5b942,#c4860f); color:#231a02; }
+  .toast.error{ background:linear-gradient(135deg,#ef4862,#a32140); }
+
+  /* ===================== مودال برنده شدن ===================== */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(2,4,14,.78); display:flex; align-items:center; justify-content:center; z-index:200;
+  }
+  .modal-card{
+    background:linear-gradient(160deg, var(--bg-3), var(--bg-2)); border:1px solid var(--gold-dim); border-radius:18px;
+    padding:36px 44px; text-align:center; max-width:380px; animation:modal-in .3s ease; box-shadow:0 20px 60px rgba(0,0,0,.6);
+  }
+  @keyframes modal-in{ from{ opacity:0; transform:scale(.85); } to{ opacity:1; transform:scale(1); } }
+  .win-icon{ font-size:54px; animation:trophy-glow 1.6s infinite; }
+  @keyframes trophy-glow{ 0%,100%{ filter:drop-shadow(0 0 8px var(--gold-bright)); } 50%{ filter:drop-shadow(0 0 26px var(--gold-bright)); } }
+  .modal-card h2{ margin:14px 0 6px; font-size:22px; }
+  .modal-card p{ color:var(--text-dim); font-size:14px; margin-bottom:20px; }
+  .modal-actions{ display:flex; gap:10px; justify-content:center; }
+
+  /* ===================== راهنمای پایین صفحه ===================== */
+  .guide{ max-width:880px; margin:40px auto 0; display:flex; flex-direction:column; gap:14px; }
+  .guide h2{ font-size:18px; color:var(--gold-bright); text-align:center; }
+  .guide details{ background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px; }
+  .guide summary{ cursor:pointer; font-weight:700; font-size:14.5px; }
+  .guide p, .guide li{ font-size:13px; color:var(--text-dim); }
+  .guide pre{
+    background:#04060f; border:1px solid var(--border); border-radius:10px; padding:12px 14px;
+    overflow-x:auto; font-size:12px; direction:ltr; text-align:left; color:#bcd0ff;
+  }
+  .guide code{ color:var(--gold-bright); }
+
+  /* ===================== واکنش‌گرا ===================== */
+  @media (max-width:900px){
+    .game-main{ flex-direction:column; }
+    .lobby-options{ grid-template-columns:1fr; }
+    .side-panel{ min-width:0; }
+  }
+  @media (max-width:560px){
+    header.app-header{ padding:14px 16px; }
+    .brand h1{ font-size:21px; }
+    main{ padding:16px 10px; }
+    .game-topbar{ padding:10px 12px; }
+    .timer-wrap{ min-width:0; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===================== هدر بازی ===================== -->
+  <header class="app-header">
+    <div class="brand">
+      <span class="logo-dice">🎲</span>
+      <div>
+        <h1>تخته‌باز</h1>
+        <p class="sub">TABBEH-BAZ · بازی تخته‌ای آنلاین و دوستانه</p>
+      </div>
+    </div>
+    <div class="mini-stats" id="header-mini-stats">برد <b id="hs-win">۰</b> · باخت <b id="hs-loss">۰</b></div>
+  </header>
+
+  <main>
+    <!-- ===================== صفحه لابی ===================== -->
+    <section id="lobby-screen" class="screen">
+      <div class="lobby-card">
+
+        <div style="text-align:center;">
+          <label class="field-label" for="name-input">نام شما در بازی</label>
+          <input id="name-input" type="text" maxlength="14" placeholder="مثلاً: علی" />
+        </div>
+
+        <div class="lobby-options">
+          <div class="option-card">
+            <h3>🆕 ساخت اتاق جدید</h3>
+            <p>یک اتاق بساز و کد ۶ کاراکتری آن را برای دوستت بفرست تا به بازی بپیوندد.</p>
+            <button id="btn-create-room" class="btn btn-gold">ساخت اتاق</button>
+          </div>
+          <div class="option-card">
+            <h3>🔑 ورود با کد دعوت</h3>
+            <p>کد ۶ کاراکتری که دوستت برایت فرستاده را وارد کن.</p>
+            <input id="join-code-input" type="text" maxlength="6" placeholder="مثلاً A7B3X9" class="code-input" />
+            <button id="btn-join-room" class="btn btn-blue">ورود به اتاق</button>
+          </div>
+        </div>
+
+        <div id="room-status-panel" class="room-status-panel hidden"></div>
+
+        <p class="hint-text">
+          💡 نکته: اگر اتاقت توسط تب دوم پیدا نمی‌شود، به‌جای باز کردن فایل با دابل‌کلیک، آن را با یک سرور لوکال
+          (مثل دستور <code>python -m http.server</code>) باز کن یا تب دوم را با «تکرار تب» در Chrome ایجاد کن؛
+          توضیح کامل در راهنمای پایین صفحه آمده است.
+        </p>
+
+        <details class="rules-toggle">
+          <summary>📖 قوانین ساده‌ی بازی (کلیک کن)</summary>
+          <ul>
+            <li>هر بازیکن ۴ مهره دارد؛ بازیکن آبی از بالای تخته و بازیکن قرمز از پایین تخته شروع می‌کند.</li>
+            <li>در هر نوبت، یک مهره را انتخاب کن و آن را یک خانه به جلو یا به‌صورت مورب (جلو-راست / جلو-چپ) حرکت بده.</li>
+            <li>اگر خانه‌ی مقصد توسط مهره‌ای (خودی یا حریف) اشغال شده باشد، نمی‌توانی به آن حرکت کنی.</li>
+            <li>وقتی مهره‌ای به آخرین ردیف تخته (خط پایان حریف) برسد، از بازی خارج می‌شود و ۱ امتیاز می‌گیری.</li>
+            <li>هر بازیکن فقط ۲۰ ثانیه برای هر حرکت وقت دارد؛ در غیر این صورت نوبت به حریف می‌رسد.</li>
+            <li>هر بازیکنی که زودتر تمام ۴ مهره‌اش را به انتها برساند، برنده‌ی بازی است!</li>
+          </ul>
+        </details>
+
+        <div class="panel-block stats-panel">
+          <h4 style="justify-content:center;">📊 آمار بازی‌های شما</h4>
+          <div id="stats-display"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================== صفحه بازی ===================== -->
+    <section id="game-screen" class="screen hidden">
+      <div class="game-topbar">
+        <div class="room-badge">اتاق: <span id="display-room-code"></span></div>
+        <div class="turn-indicator" id="turn-indicator"></div>
+        <div class="timer-wrap">
+          <div class="timer-bar-bg"><div id="timer-bar"></div></div>
+          <span id="timer-text">۲۰ ثانیه</span>
+        </div>
+        <button id="btn-resign" class="btn-danger-outline">🏳️ تسلیم</button>
+      </div>
+
+      <div class="game-main">
+        <div class="board-area">
+          <div class="scoreboard">
+            <div class="score-chip blue"><span class="dot"></span><span id="player1-name-score">بازیکن آبی</span>: <b id="score-1">۰</b>/۴</div>
+            <div class="score-chip red"><span class="dot"></span><span id="player2-name-score">بازیکن قرمز</span>: <b id="score-2">۰</b>/۴</div>
+          </div>
+          <div id="board"></div>
+        </div>
+
+        <aside class="side-panel">
+          <div class="panel-block">
+            <h4>📜 تاریخچه حرکات (۵ مورد آخر)</h4>
+            <ul class="history-list" id="history-list"></ul>
+          </div>
+
+          <div class="panel-block chat-block">
+            <h4>💬 گفتگو</h4>
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="sticker-row" id="sticker-row"></div>
+            <div class="chat-input-row">
+              <button class="btn-icon" id="btn-emoji-toggle" title="ایموجی">😊</button>
+              <input id="chat-input" type="text" maxlength="200" placeholder="پیامت را بنویس..." />
+              <button class="btn-icon send" id="btn-send-chat" title="ارسال">➤</button>
+              <div class="emoji-picker hidden" id="emoji-picker"></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ===================== راهنمای اتصال آنلاین ===================== -->
+    <section class="guide">
+      <h2>🔌 راهنمای کامل اتصال آنلاین با دوستان</h2>
+
+      <details>
+        <summary>۱) تست سریع داخل همین مرورگر (BroadcastChannel) — همین الان کار می‌کند</summary>
+        <p>
+          این فایل از <code>BroadcastChannel API</code> استفاده می‌کند که به دو تب باز از یک مرورگر اجازه می‌دهد
+          آنی با هم پیام مبادله کنند؛ بدون نیاز به اینترنت یا سرور. برای تست:
+        </p>
+        <ul>
+          <li>این فایل HTML را یک‌بار باز کن و یک اتاق بساز.</li>
+          <li>یک تب جدید باز کن (ترجیحاً با «تکرار تب» یا Ctrl+Click روی همین فایل) و کد اتاق را وارد کن.</li>
+          <li>توجه: اگر فایل را با دابل‌کلیک (آدرس <code>file://</code>) باز کرده‌ای، بعضی مرورگرها (به‌خصوص Firefox)
+            هر تب را در یک «origin» جدا در نظر می‌گیرند و BroadcastChannel/LocalStorage بین تب‌ها مشترک نمی‌شود.
+            برای رفع این مشکل، فایل را با یک سرور لوکال سرو کن، مثلاً:</li>
+        </ul>
+        <pre>cd پوشه‌ای‌که‌فایل‌در‌آن‌است
+python -m http.server 8000
+# سپس در مرورگر باز کن:
+http://localhost:8000/tabbeh-baz.html</pre>
+        <p>این روش فقط بین تب‌ها/پنجره‌های همان مرورگر روی همان دستگاه کار می‌کند، نه بین دو دستگاه مختلف.</p>
+      </details>
+
+      <details>
+        <summary>۲) بازی واقعی بین دو دستگاه/شبکه‌ی متفاوت (WebRTC)</summary>
+        <p>
+          برای ارتباط واقعی بین دو دستگاه در دو شبکه‌ی مختلف، باید از <b>WebRTC</b> استفاده کنی. مرورگرها برای برقراری
+          اتصال مستقیم (Peer-to-Peer) نیاز دارند اطلاعات اتصال (Offer / Answer / ICE Candidates) را یک‌بار از طریق
+          یک کانال جداگانه به نام «سیگنالینگ» مبادله کنند؛ بعد از آن، داده‌های بازی مستقیماً بین دو مرورگر جابه‌جا می‌شود
+          (بدون عبور از سرور). دو روش رایج برای پیاده‌سازی سیگنالینگ:
+        </p>
+        <p><b>روش الف — کپی‌پیست دستی (بدون هیچ سروری):</b></p>
+        <ul>
+          <li>بازیکن اول یک <code>RTCPeerConnection</code> می‌سازد، یک Offer تولید می‌کند و صبر می‌کند ICE کامل شود.</li>
+          <li>متن Offer (یک رشته‌ی JSON/SDP) را کپی و از طریق تلگرام/واتساپ برای دوستش می‌فرستد.</li>
+          <li>بازیکن دوم آن را در فیلد مخصوص Paste می‌کند، یک Answer تولید می‌شود و آن را برای بازیکن اول می‌فرستد.</li>
+          <li>بازیکن اول Answer را Paste می‌کند؛ از این لحظه یک <code>RTCDataChannel</code> مستقیم بین دو مرورگر باز می‌شود
+            و دقیقاً همان پیام‌هایی که الان با <code>channel.postMessage(...)</code> فرستاده می‌شوند را می‌توان با
+            <code>dataChannel.send(...)</code> فرستاد.</li>
+        </ul>
+        <pre>// نمونه‌ی بسیار ساده (نیاز به تکمیل و رابط کاربری برای کپی/پیست دارد)
+const pc = new RTCPeerConnection({ iceServers:[{urls:'stun:stun.l.google.com:19302'}] });
+const dc = pc.createDataChannel('game');
+dc.onmessage = e => console.log('پیام دریافتی:', e.data);
+
+const offer = await pc.createOffer();
+await pc.setLocalDescription(offer);
+// صبر کن تا pc.iceGatheringState === 'complete' شود، سپس:
+const offerText = JSON.stringify(pc.localDescription);
+// این متن را برای دوستت بفرست (کپی/پیست)</pre>
+        <p><b>روش ب — سرور سیگنالینگ کوچک + Ngrok:</b></p>
+        <ul>
+          <li>یک سرور WebSocket کوچک با Node.js بساز که فقط پیام‌های دو طرف یک «اتاق» را به هم پاس می‌دهد.</li>
+          <li>با دستور <code>ngrok http 3000</code> آن را به یک آدرس عمومی (https) تبدیل کن.</li>
+          <li>هر دو بازیکن از طریق همان آدرس Ngrok به سرور وصل می‌شوند، Offer/Answer/ICE را از طریق آن مبادله می‌کنند
+            و سپس اتصال مستقیم WebRTC برقرار می‌شود.</li>
+        </ul>
+        <pre>// server.js — یک سیگنالینگ بسیار ساده
+const { WebSocketServer } = require('ws');
+const wss = new WebSocketServer({ port: 3000 });
+const rooms = {};
+wss.on('connection', ws => {
+  ws.on('message', raw => {
+    const msg = JSON.parse(raw);
+    rooms[msg.room] = rooms[msg.room] || [];
+    rooms[msg.room].push(ws);
+    rooms[msg.room].forEach(client => {
+      if (client !== ws) client.send(raw);
+    });
+  });
+});</pre>
+        <p><b>روش ج — Firebase Realtime Database به‌جای سرور:</b></p>
+        <ul>
+          <li>یک پروژه‌ی رایگان Firebase بساز و Realtime Database را فعال کن.</li>
+          <li>به‌جای WebSocket، Offer/Answer/ICE را در مسیر <code>rooms/&lt;کد اتاق&gt;</code> بنویس و با
+            <code>onValue(...)</code> آن را در طرف مقابل بخوان.</li>
+          <li>بعد از برقراری اتصال WebRTC، دیگر نیازی به Firebase نیست؛ داده‌های بازی مستقیم جابه‌جا می‌شوند.</li>
+        </ul>
+        <p>
+          نکته: ساختار کد این فایل به‌گونه‌ای نوشته شده که تمام ارتباطات از یک تابع مرکزی
+          (<code>saveAndBroadcast</code>) عبور می‌کنند؛ اگر بخواهی WebRTC واقعی اضافه کنی، کافی است در آن تابع
+          به‌جای <code>channel.postMessage(...)</code> از <code>dataChannel.send(...)</code> استفاده کنی.
+        </p>
+      </details>
+
+      <details>
+        <summary>۳) محدودیت‌های نسخه‌ی فعلی</summary>
+        <ul>
+          <li>نسخه‌ی فعلی برای بازی بین دو <b>تب/پنجره‌ی همان مرورگر روی همان دستگاه</b> به‌صورت کامل کار می‌کند.</li>
+          <li>برای بازی بین دو دستگاه واقعی (مثلاً گوشی تو و گوشی دوستت)، باید یکی از روش‌های WebRTC بالا را اضافه کنی.</li>
+          <li>هیچ داده‌ای به سروری ارسال نمی‌شود؛ تمام اطلاعات (وضعیت بازی، آمار، چت) فقط در مرورگر خودت
+            در <code>localStorage</code> ذخیره می‌شود.</li>
+        </ul>
+      </details>
+    </section>
+  </main>
+
+  <!-- ===================== نوتیفیکیشن‌ها و مودال برد ===================== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <div class="modal-overlay hidden" id="win-modal">
+    <div class="modal-card">
+      <div class="win-icon" id="win-modal-icon">🏆</div>
+      <h2 id="win-modal-title">بازیکن آبی برنده شد!</h2>
+      <p id="win-modal-sub"></p>
+      <div class="modal-actions">
+        <button class="btn btn-gold" id="btn-new-game">بازی جدید</button>
+        <button class="btn btn-ghost" id="btn-close-modal">بستن</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* =====================================================================
+   تخته‌باز — منطق کامل بازی
+   تمام کامنت‌ها به زبان فارسی نوشته شده‌اند تا کد قابل‌فهم باشد.
+   ===================================================================== */
+
+'use strict';
+
+/* ---------- متغیرهای سراسری وضعیت برنامه ---------- */
+let role = null;          // نقش من در بازی: ۱ = آبی، ۲ = قرمز
+let isHost = false;       // آیا من سازنده‌ی اتاق هستم؟
+let roomCode = null;      // کد اتاق فعلی
+let myName = '';          // نام من
+let channel = null;       // کانال ارتباطی BroadcastChannel
+let state = null;         // وضعیت کامل و مشترک بازی (بین دو بازیکن سینک می‌شود)
+let selectedCell = null;  // مهره‌ی انتخاب‌شده‌ی فعلی برای حرکت {row, col}
+
+const MOVE_TIME = 20; // مدت‌زمان هر نوبت بر حسب ثانیه
+
+/* ---------- تبدیل اعداد انگلیسی به ارقام فارسی برای نمایش زیباتر ---------- */
+function fa(n){
+  const d = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+  return String(n).replace(/[0-9]/g, x => d[x]);
+}
+
+/* =====================================================================
+   ۱) منطق اصلی بازی (تخته، حرکت‌ها، قوانین)
+   ===================================================================== */
+
+// ساخت تخته‌ی اولیه: بازیکن آبی (۱) بالا، بازیکن قرمز (۲) پایین
+function createInitialBoard(){
+  const board = Array.from({ length: 8 }, () => Array(8).fill(0));
+  [2, 3, 4, 5].forEach(c => { board[0][c] = 1; }); // ردیف اول: ۴ مهره‌ی آبی
+  [2, 3, 4, 5].forEach(c => { board[7][c] = 2; }); // ردیف آخر: ۴ مهره‌ی قرمز
+  return board;
+}
+
+// برچسب نمایشی هر بازیکن
+function pieceLabel(p){
+  return p === 1 ? '🔵 بازیکن آبی' : '🔴 بازیکن قرمز';
+}
+
+// محاسبه‌ی خانه‌های مجاز برای حرکت یک مهره (جلو / مورب‌جلو-راست / مورب‌جلو-چپ)
+function getValidMoves(board, row, col, player){
+  const dir = player === 1 ? 1 : -1; // آبی به سمت پایین (+۱)، قرمز به سمت بالا (-۱)
+  const candidates = [
+    [row + dir, col - 1],
+    [row + dir, col],
+    [row + dir, col + 1]
+  ];
+  return candidates.filter(([r, c]) =>
+    r >= 0 && r < 8 && c >= 0 && c < 8 && board[r][c] === 0
+  );
+}
+
+// آیا بازیکن داده‌شده حداقل یک حرکت ممکن دارد؟
+function hasAnyMove(board, player){
+  for (let r = 0; r < 8; r++){
+    for (let c = 0; c < 8; c++){
+      if (board[r][c] === player && getValidMoves(board, r, c, player).length > 0){
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+// افزودن یک خط به تاریخچه (همیشه فقط ۵ مورد آخر نگه‌داشته می‌شود)
+function addHistory(st, text, isSystem){
+  st.history.push({ text, system: !!isSystem });
+  if (st.history.length > 5) st.history = st.history.slice(-5);
+}
+
+// اعمال یک حرکت روی وضعیت بازی
+function applyMove(st, fromRow, fromCol, toRow, toCol){
+  const player = st.board[fromRow][fromCol];
+  st.board[fromRow][fromCol] = 0;
+  const finalRow = player === 1 ? 7 : 0;
+
+  if (toRow === finalRow){
+    // مهره به خط پایان رسید: از بازی خارج می‌شود و امتیاز می‌گیرد
+    st.scores[player]++;
+    addHistory(st, `${pieceLabel(player)} یک مهره را به انتها رساند (+۱ امتیاز) 🎉`);
+  } else {
+    st.board[toRow][toCol] = player;
+    addHistory(st, `${pieceLabel(player)} حرکت کرد: (${fa(fromRow + 1)},${fa(fromCol + 1)}) ← (${fa(toRow + 1)},${fa(toCol + 1)})`);
+  }
+
+  // بررسی برد
+  if (st.scores[player] === 4){
+    st.status = 'ended';
+    st.winner = player;
+    addHistory(st, `🏆 ${pieceLabel(player)} با رساندن تمام مهره‌ها برنده‌ی بازی شد!`, true);
+    return;
+  }
+
+  // نوبت به حریف می‌رسد
+  const nextPlayer = player === 1 ? 2 : 1;
+  st.turn = nextPlayer;
+  st.turnStartedAt = Date.now();
+
+  // اگر حریف هیچ حرکت ممکنی نداشته باشد، نوبت دوباره به بازیکن فعلی برمی‌گردد
+  if (!hasAnyMove(st.board, nextPlayer)){
+    addHistory(st, `${pieceLabel(nextPlayer)} هیچ حرکت ممکنی ندارد - نوبت رد شد`, true);
+    st.turn = player;
+    st.turnStartedAt = Date.now();
+  }
+}
+
+/* =====================================================================
+   ۲) مدیریت اتاق و ارتباط آنلاین (BroadcastChannel)
+   ===================================================================== */
+
+// تولید یک کد دعوت ۶ کاراکتری (ترکیب حروف بزرگ و اعداد، بدون کاراکترهای مشابه)
+function generateRoomCode(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
+}
+
+// اتصال به کانال ارتباطی مربوط به یک اتاق خاص
+function connectChannel(code){
+  if (channel) channel.close();
+  channel = new BroadcastChannel('tabbeh-baz-room-' + code);
+  channel.onmessage = (e) => handleIncomingMessage(e.data);
+}
+
+// مدیریت پیام‌های دریافتی از حریف
+function handleIncomingMessage(msg){
+  if (!msg || msg.code !== roomCode) {
+    // پیام‌های نوع state ممکن است code نداشته باشند؛ آن را هم بپذیر اگر state.roomCode برابر باشد
+    if (!(msg && msg.state && msg.state.roomCode === roomCode)) {
+      if (msg.type !== 'join' && msg.type !== 'request-state') return;
+    }
+  }
+
+  if (msg.type === 'join' && isHost){
+    // بازیکن دوم به اتاق پیوست
+    const firstJoin = !state.players[2] || !state.players[2].connected;
+    state.players[2] = { name: msg.name, connected: true };
+    if (state.status === 'waiting') state.status = 'playing';
+    state.turnStartedAt = Date.now();
+    if (firstJoin) addHistory(state, `${msg.name} به اتاق پیوست! بازی شروع شد 🎮`, true);
+    saveAndBroadcast();
+    showGameScreen();
+    render();
+  } else if (msg.type === 'request-state'){
+    // یک طرف وضعیت فعلی را درخواست کرده (مثلاً بعد از رفرش صفحه)
+    if (state) channel.postMessage({ type: 'state', code: roomCode, state });
+  } else if (msg.type === 'state'){
+    if (!msg.state || msg.state.roomCode !== roomCode) return;
+    const wasWaiting = !state || state.status !== 'playing';
+    state = msg.state;
+    saveLocalGame();
+    if (wasWaiting && state.status === 'playing') showGameScreen();
+    if (state.status === 'ended') document.getElementById('game-screen').classList.remove('hidden');
+    render();
+    checkGameEnd();
+  }
+}
+
+// ذخیره‌ی وضعیت بازی در LocalStorage و ارسال آن برای حریف
+function saveAndBroadcast(){
+  saveLocalGame();
+  if (channel) channel.postMessage({ type: 'state', code: roomCode, state });
+}
+
+function saveLocalGame(){
+  if (!state) return;
+  localStorage.setItem('tabbehBaz_game_' + roomCode, JSON.stringify(state));
+  localStorage.setItem('tabbehBaz_session', JSON.stringify({ roomCode, role, isHost, myName }));
+}
+
+/* =====================================================================
+   ۳) ساخت اتاق / پیوستن به اتاق
+   ===================================================================== */
+
+function createRoom(){
+  myName = (document.getElementById('name-input').value || '').trim() || 'بازیکن ۱';
+  role = 1;
+  isHost = true;
+  roomCode = generateRoomCode();
+
+  state = {
+    roomCode,
+    gameId: roomCode + '-' + Date.now(),
+    board: createInitialBoard(),
+    turn: 1,
+    scores: { 1: 0, 2: 0 },
+    status: 'waiting',
+    winner: null,
+    resignedBy: null,
+    turnStartedAt: Date.now(),
+    history: [],
+    chat: [],
+    players: { 1: { name: myName, connected: true }, 2: { name: null, connected: false } }
+  };
+
+  connectChannel(roomCode);
+  saveLocalGame();
+  showRoomCreatedUI();
+}
+
+function joinRoom(){
+  const codeInput = (document.getElementById('join-code-input').value || '').trim().toUpperCase();
+  if (codeInput.length !== 6){
+    showToast('کد اتاق باید دقیقاً ۶ کاراکتر باشد.', 'error');
+    return;
+  }
+  myName = (document.getElementById('name-input').value || '').trim() || 'بازیکن ۲';
+  role = 2;
+  isHost = false;
+  roomCode = codeInput;
+  state = null;
+
+  connectChannel(roomCode);
+  channel.postMessage({ type: 'join', code: roomCode, name: myName });
+  localStorage.setItem('tabbehBaz_session', JSON.stringify({ roomCode, role, isHost, myName }));
+  showWaitingForHostUI();
+
+  setTimeout(() => {
+    if (!state){
+      showToast('اتاقی با این کد پیدا نشد. مطمئن شو بازیکن اول تبِ بازی را باز نگه داشته است.', 'error');
+    }
+  }, 3500);
+}
+
+/* =====================================================================
+   ۴) رابط کاربری لابی
+   ===================================================================== */
+
+function showRoomCreatedUI(){
+  const panel = document.getElementById('room-status-panel');
+  panel.classList.remove('hidden');
+  panel.innerHTML = `
+    <div class="waiting-row"><span class="spinner"></span> در انتظار پیوستن بازیکن دوم...</div>
+    <div class="room-code-display" id="room-code-text">${roomCode}</div>
+    <button class="btn btn-gold" id="btn-copy-code">📋 کپی کد اتاق</button>
+    <div class="players-slot-row">
+      <div class="player-slot blue"><span class="dot"></span> ${myName} (آبی)</div>
+      <div class="player-slot red empty"><span class="dot"></span> در انتظار...</div>
+    </div>
+    <button class="btn btn-ghost" id="btn-cancel-room">لغو و بازگشت</button>
+  `;
+  document.getElementById('btn-copy-code').onclick = () => copyRoomCode();
+  document.getElementById('btn-cancel-room').onclick = () => resetToLobby();
+}
+
+function showWaitingForHostUI(){
+  const panel = document.getElementById('room-status-panel');
+  panel.classList.remove('hidden');
+  panel.innerHTML = `
+    <div class="waiting-row"><span class="spinner"></span> در حال اتصال به اتاق ${roomCode}...</div>
+    <button class="btn btn-ghost" id="btn-cancel-join">لغو</button>
+  `;
+  document.getElementById('btn-cancel-join').onclick = () => resetToLobby();
+}
+
+function copyRoomCode(){
+  const text = roomCode;
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(() => showToast('کد اتاق کپی شد!', 'success'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); ta.remove();
+    showToast('کد اتاق کپی شد!', 'success');
+  }
+}
+
+function resetToLobby(){
+  if (channel) { channel.close(); channel = null; }
+  localStorage.removeItem('tabbehBaz_session');
+  state = null; role = null; isHost = false; roomCode = null; selectedCell = null;
+  document.getElementById('game-screen').classList.add('hidden');
+  document.getElementById('lobby-screen').classList.remove('hidden');
+  document.getElementById('room-status-panel').classList.add('hidden');
+  document.getElementById('win-modal').classList.add('hidden');
+  renderStats();
+}
+
+/* =====================================================================
+   ۵) رابط کاربری صفحه‌ی بازی
+   ===================================================================== */
+
+function showGameScreen(){
+  document.getElementById('lobby-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.remove('hidden');
+  document.getElementById('display-room-code').textContent = roomCode;
+  buildStickerRow();
+  buildEmojiPicker();
+}
+
+function render(){
+  if (!state) return;
+
+  // نام بازیکنان روی نمایش امتیاز
+  document.getElementById('player1-name-score').textContent = state.players[1]?.name || 'بازیکن آبی';
+  document.getElementById('player2-name-score').textContent = state.players[2]?.name || 'بازیکن قرمز';
+  document.getElementById('score-1').textContent = fa(state.scores[1]);
+  document.getElementById('score-2').textContent = fa(state.scores[2]);
+
+  // نشانگر نوبت
+  const turnEl = document.getElementById('turn-indicator');
+  turnEl.className = 'turn-indicator ' + (state.turn === 1 ? 'blue' : 'red');
+  const turnName = state.players[state.turn]?.name || pieceLabel(state.turn);
+  turnEl.innerHTML = `<span class="dot"></span> نوبت: ${turnName} ${state.turn === role ? '(نوبت شماست!)' : ''}`;
+
+  renderBoard();
+  renderHistory();
+  renderChat();
+
+  const boardEl = document.getElementById('board');
+  boardEl.classList.toggle('your-turn', state.status === 'playing' && state.turn === role);
+
+  if (state.status === 'ended'){
+    document.getElementById('btn-resign').setAttribute('disabled', 'true');
+  } else {
+    document.getElementById('btn-resign').removeAttribute('disabled');
+  }
+}
+
+function renderBoard(){
+  const boardEl = document.getElementById('board');
+  boardEl.innerHTML = '';
+  const moves = selectedCell ? getValidMoves(state.board, selectedCell.row, selectedCell.col, role) : [];
+
+  for (let r = 0; r < 8; r++){
+    for (let c = 0; c < 8; c++){
+      const cell = document.createElement('div');
+      cell.className = 'cell ' + ((r + c) % 2 === 0 ? 'dark' : 'light');
+
+      const val = state.board[r][c];
+      if (val){
+        const piece = document.createElement('div');
+        piece.className = 'piece ' + (val === 1 ? 'blue' : 'red');
+        if (selectedCell && selectedCell.row === r && selectedCell.col === c) piece.classList.add('selected');
+        cell.appendChild(piece);
+      }
+      if (moves.some(([mr, mc]) => mr === r && mc === c)) cell.classList.add('valid-move');
+
+      cell.addEventListener('click', () => onCellClick(r, c));
+      boardEl.appendChild(cell);
+    }
+  }
+}
+
+function renderHistory(){
+  const list = document.getElementById('history-list');
+  list.innerHTML = '';
+  state.history.slice(-5).forEach(h => {
+    const li = document.createElement('li');
+    if (h.system) li.classList.add('system');
+    li.textContent = h.text;
+    list.appendChild(li);
+  });
+}
+
+function renderChat(){
+  const box = document.getElementById('chat-messages');
+  box.innerHTML = '';
+  (state.chat || []).forEach(m => {
+    const div = document.createElement('div');
+    if (m.type === 'system'){
+      div.className = 'chat-msg system';
+      div.textContent = m.text;
+    } else {
+      div.className = 'chat-msg ' + (m.sender === role ? 'mine' : 'theirs') + (m.type === 'sticker' ? ' sticker' : '');
+      div.innerHTML = (m.type === 'sticker' ? m.text : `${escapeHtml(m.text)}<span class="meta">${m.name}</span>`);
+    }
+    box.appendChild(div);
+  });
+  box.scrollTop = box.scrollHeight;
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+/* ---------- کلیک روی خانه‌های تخته ---------- */
+function onCellClick(r, c){
+  if (!state || state.status !== 'playing') return;
+  if (state.turn !== role){ showToast('نوبت شما نیست!', 'warning'); return; }
+
+  const val = state.board[r][c];
+
+  if (selectedCell){
+    const moves = getValidMoves(state.board, selectedCell.row, selectedCell.col, role);
+    const isValidTarget = moves.some(([mr, mc]) => mr === r && mc === c);
+
+    if (isValidTarget){
+      applyMove(state, selectedCell.row, selectedCell.col, r, c);
+      selectedCell = null;
+      saveAndBroadcast();
+      render();
+      checkGameEnd();
+      return;
+    }
+    if (val === role){
+      selectedCell = { row: r, col: c };
+      render();
+      return;
+    }
+    selectedCell = null;
+    render();
+    showToast('حرکت نامعتبر!', 'error');
+    shakeBoard();
+    return;
+  }
+
+  if (val === role){
+    selectedCell = { row: r, col: c };
+    render();
+  }
+}
+
+function shakeBoard(){
+  const b = document.getElementById('board');
+  b.classList.remove('shake');
+  requestAnimationFrame(() => b.classList.add('shake'));
+}
+
+/* =====================================================================
+   ۶) تایمر ۲۰ ثانیه‌ای هر نوبت
+   ===================================================================== */
+
+function tickTimer(){
+  if (!state || state.status !== 'playing'){
+    document.getElementById('timer-text').textContent = `${fa(MOVE_TIME)} ثانیه`;
+    document.getElementById('timer-bar').style.width = '100%';
+    return;
+  }
+  const elapsed = (Date.now() - state.turnStartedAt) / 1000;
+  const remaining = Math.max(0, MOVE_TIME - elapsed);
+  document.getElementById('timer-text').textContent = `${fa(Math.ceil(remaining))} ثانیه`;
+  document.getElementById('timer-bar').style.width = (remaining / MOVE_TIME * 100) + '%';
+  document.getElementById('timer-bar').style.background =
+    remaining < 6 ? 'linear-gradient(90deg, var(--danger), var(--red-light))' : '';
+
+  if (remaining <= 0 && state.turn === role){
+    handleTimeout();
+  }
+}
+setInterval(tickTimer, 200);
+
+function handleTimeout(){
+  if (!state || state.status !== 'playing' || state.turn !== role) return;
+  addHistory(state, `⏰ زمان ${pieceLabel(role)} به پایان رسید - نوبت رد شد`, true);
+  state.turn = role === 1 ? 2 : 1;
+  state.turnStartedAt = Date.now();
+  selectedCell = null;
+  saveAndBroadcast();
+  render();
+  showToast('زمان شما تمام شد! نوبت به حریف رسید.', 'warning');
+}
+
+/* =====================================================================
+   ۷) تسلیم شدن و پایان بازی
+   ===================================================================== */
+
+function resignGame(){
+  if (!state || state.status !== 'playing') return;
+  if (!confirm('آیا مطمئن هستید که می‌خواهید تسلیم شوید؟')) return;
+
+  state.status = 'ended';
+  state.winner = role === 1 ? 2 : 1;
+  state.resignedBy = role;
+  addHistory(state, `🏳️ ${pieceLabel(role)} تسلیم شد`, true);
+  saveAndBroadcast();
+  render();
+  checkGameEnd();
+}
+
+function checkGameEnd(){
+  if (!state || state.status !== 'ended') return;
+  const recorded = JSON.parse(localStorage.getItem('tabbehBaz_recorded') || '[]');
+  if (recorded.includes(state.gameId)) { showWinModalIfNotShown(); return; }
+  recorded.push(state.gameId);
+  if (recorded.length > 50) recorded.shift();
+  localStorage.setItem('tabbehBaz_recorded', JSON.stringify(recorded));
+
+  updateStats(state.winner === role);
+  showWinModal();
+}
+
+function updateStats(won){
+  const stats = JSON.parse(localStorage.getItem('tabbehBazStats') || '{"wins":0,"losses":0,"draws":0}');
+  if (won) stats.wins++; else stats.losses++;
+  localStorage.setItem('tabbehBazStats', JSON.stringify(stats));
+  renderStats();
+}
+
+function renderStats(){
+  const stats = JSON.parse(localStorage.getItem('tabbehBazStats') || '{"wins":0,"losses":0,"draws":0}');
+  document.getElementById('hs-win').textContent = fa(stats.wins);
+  document.getElementById('hs-loss').textContent = fa(stats.losses);
+  document.getElementById('stats-display').innerHTML = `
+    <div class="stat"><b>${fa(stats.wins)}</b>برد</div>
+    <div class="stat"><b>${fa(stats.losses)}</b>باخت</div>
+    <div class="stat"><b>${fa(stats.draws)}</b>مساوی</div>
+  `;
+}
+
+let winModalShown = false;
+function showWinModal(){
+  if (winModalShown) return;
+  winModalShown = true;
+  const won = state.winner === role;
+  document.getElementById('win-modal-icon').textContent = won ? '🏆' : '😔';
+  document.getElementById('win-modal-title').textContent =
+    state.resignedBy
+      ? `${pieceLabel(state.winner)} برنده شد (تسلیم حریف)`
+      : `${pieceLabel(state.winner)} برنده‌ی بازی شد!`;
+  document.getElementById('win-modal-sub').textContent =
+    `امتیاز نهایی — ${pieceLabel(1)}: ${fa(state.scores[1])} | ${pieceLabel(2)}: ${fa(state.scores[2])}`;
+  document.getElementById('win-modal').classList.remove('hidden');
+}
+function showWinModalIfNotShown(){ if (!winModalShown) showWinModal(); }
+
+/* =====================================================================
+   ۸) چت، ایموجی و استیکر
+   ===================================================================== */
+
+const STICKERS = ['👍', '🎉', '😂', '😢', '🔥', '🏆', '👏', '🤝'];
+const EMOJIS = ['😀','😂','😍','😉','😎','🤔','😢','😡','👍','👎','🎉','🔥','❤️','💪','🙏','😴','🤝','🥳'];
+
+function buildStickerRow(){
+  const row = document.getElementById('sticker-row');
+  row.innerHTML = '';
+  STICKERS.forEach(s => {
+    const btn = document.createElement('button');
+    btn.textContent = s;
+    btn.title = 'ارسال استیکر';
+    btn.onclick = () => sendChat(s, 'sticker');
+    row.appendChild(btn);
+  });
+}
+
+function buildEmojiPicker(){
+  const picker = document.getElementById('emoji-picker');
+  picker.innerHTML = '';
+  EMOJIS.forEach(em => {
+    const btn = document.createElement('button');
+    btn.textContent = em;
+    btn.onclick = () => {
+      const input = document.getElementById('chat-input');
+      input.value += em;
+      input.focus();
+    };
+    picker.appendChild(btn);
+  });
+}
+
+function sendChat(text, type){
+  if (!state || !text || !text.trim()) return;
+  const msg = { sender: role, name: myName, text: text.trim(), time: Date.now(), type: type || 'text' };
+  state.chat = state.chat || [];
+  state.chat.push(msg);
+  if (state.chat.length > 60) state.chat = state.chat.slice(-60);
+  saveAndBroadcast();
+  renderChat();
+  document.getElementById('chat-input').value = '';
+}
+
+/* =====================================================================
+   ۹) نوتیفیکیشن (toast)
+   ===================================================================== */
+
+function showToast(text, type){
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast ' + (type || 'info');
+  toast.textContent = text;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3500);
+}
+
+/* =====================================================================
+   ۱۰) رویدادهای صفحه و راه‌اندازی اولیه
+   ===================================================================== */
+
+document.getElementById('btn-create-room').onclick = createRoom;
+document.getElementById('btn-join-room').onclick = joinRoom;
+document.getElementById('btn-resign').onclick = resignGame;
+document.getElementById('btn-new-game').onclick = () => { winModalShown = false; resetToLobby(); };
+document.getElementById('btn-close-modal').onclick = () => document.getElementById('win-modal').classList.add('hidden');
+document.getElementById('btn-send-chat').onclick = () => sendChat(document.getElementById('chat-input').value);
+document.getElementById('chat-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') sendChat(e.target.value);
+});
+document.getElementById('btn-emoji-toggle').onclick = () => document.getElementById('emoji-picker').classList.toggle('hidden');
+document.getElementById('join-code-input').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
+
+// بازیابی نشست قبلی از LocalStorage (در صورت رفرش شدن صفحه)
+function init(){
+  renderStats();
+  let session = null;
+  try { session = JSON.parse(localStorage.getItem('tabbehBaz_session') || 'null'); } catch (e) { session = null; }
+
+  if (session && session.roomCode){
+    roomCode = session.roomCode;
+    role = session.role;
+    isHost = session.isHost;
+    myName = session.myName;
+
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem('tabbehBaz_game_' + roomCode) || 'null'); } catch (e) { saved = null; }
+    if (saved) state = saved;
+
+    connectChannel(roomCode);
+    channel.postMessage({ type: 'request-state', code: roomCode });
+
+    if (state && (state.status === 'playing' || state.status === 'ended')){
+      showGameScreen();
+      render();
+    } else if (isHost){
+      showRoomCreatedUI();
+    } else {
+      showWaitingForHostUI();
+    }
+  }
+}
+
+init();
+</script>
+</body>
+</html>
