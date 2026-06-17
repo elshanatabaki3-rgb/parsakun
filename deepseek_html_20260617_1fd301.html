@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 حدس کشور</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #0b2b40, #1a4b5f);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .game-container {
+            background: #f5f9ff;
+            border-radius: 48px;
+            padding: 40px 35px;
+            max-width: 550px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+        h1 {
+            color: #0b2b40;
+            font-size: 2rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .subtitle {
+            color: #2c5a6e;
+            font-weight: 500;
+            margin-top: -5px;
+            margin-bottom: 30px;
+            font-size: 1rem;
+            border-bottom: 2px dashed #b0d0dd;
+            padding-bottom: 12px;
+        }
+        .flag-area {
+            background: #dce9f2;
+            border-radius: 30px;
+            padding: 30px 15px;
+            margin-bottom: 25px;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .flag-emoji {
+            font-size: 5.5rem;
+            line-height: 1.2;
+            display: block;
+        }
+        .hint-text {
+            font-size: 1.2rem;
+            color: #1b3d4e;
+            background: #eef6fb;
+            padding: 10px 18px;
+            border-radius: 60px;
+            display: inline-block;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0 15px;
+        }
+        #countryInput {
+            padding: 16px 20px;
+            border: 2px solid #b8d4e3;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            background: white;
+            text-align: center;
+            direction: rtl;
+            transition: 0.2s;
+            outline: none;
+        }
+        #countryInput:focus {
+            border-color: #1f6d8a;
+            box-shadow: 0 0 0 4px rgba(31, 109, 138, 0.2);
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: #1f6d8a;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            flex: 1 1 auto;
+            min-width: 110px;
+            box-shadow: 0 6px 0 #0f3e4f;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #0f3e4f;
+            background: #2583a3;
+        }
+        .btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 2px 0 #0f3e4f;
+        }
+        .btn-secondary {
+            background: #e0eef6;
+            color: #0b2b40;
+            box-shadow: 0 6px 0 #b0cbd8;
+        }
+        .btn-secondary:hover {
+            background: #d1e4ef;
+            box-shadow: 0 8px 0 #b0cbd8;
+        }
+        #message {
+            margin-top: 25px;
+            font-size: 1.1rem;
+            padding: 12px;
+            border-radius: 40px;
+            background: #e2f0f7;
+            color: #0a2c3b;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        #message.success {
+            background: #c7e6c7;
+            color: #1a5a1a;
+        }
+        #message.error {
+            background: #fce1e1;
+            color: #8f2a2a;
+        }
+        .score {
+            margin-top: 18px;
+            font-size: 1rem;
+            color: #1c4d61;
+            background: #d2e7f1;
+            padding: 8px 15px;
+            border-radius: 60px;
+            display: inline-block;
+        }
+        footer {
+            margin-top: 25px;
+            font-size: 0.8rem;
+            color: #6f93a3;
+        }
+        @media (max-width: 480px) {
+            .game-container { padding: 25px 18px; }
+            .flag-emoji { font-size: 4rem; }
+            .btn { padding: 12px 18px; min-width: 80px; }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <h1>🌍 حدس کشور</h1>
+    <div class="subtitle">🇮🇷 نام کشور را با دقت وارد کن</div>
+
+    <div class="flag-area">
+        <span class="flag-emoji" id="flagDisplay">🏳️</span>
+        <div class="hint-text" id="hintText">کشور را حدس بزنید</div>
+    </div>
+
+    <div class="input-group">
+        <input type="text" id="countryInput" placeholder="مثال: ایران، فرانسه، ژاپن ..." dir="rtl" autofocus>
+        <div class="btn-group">
+            <button class="btn" id="guessBtn">✅ حدس</button>
+            <button class="btn btn-secondary" id="nextBtn">⏩ بعدی</button>
+        </div>
+    </div>
+
+    <div id="message">💡 نام کشور را بنویس و دکمه حدس رو بزن</div>
+
+    <div class="score" id="scoreDisplay">🏆 امتیاز: ۰</div>
+    <footer>هر بار که درست حدس بزنی +۱ امتیاز</footer>
+</div>
+
+<script>
+    (function(){
+        // ---------- لیست کشورها (نام + ایموجی پرچم) ----------
+        const countries = [
+            { name: "افغانستان", flag: "🇦🇫" },
+            { name: "آفریقای جنوبی", flag: "🇿🇦" },
+            { name: "آلبانی", flag: "🇦🇱" },
+            { name: "الجزایر", flag: "🇩🇿" },
+            { name: "آلمان", flag: "🇩🇪" },
+            { name: "انگلیس", flag: "🇬🇧" },
+            { name: "امارات متحده عربی", flag: "🇦🇪" },
+            { name: "آمریکا", flag: "🇺🇸" },
+            { name: "اندونزی", flag: "🇮🇩" },
+            { name: "اتریش", flag: "🇦🇹" },
+            { name: "استرالیا", flag: "🇦🇺" },
+            { name: "برزیل", flag: "🇧🇷" },
+            { name: "پاکستان", flag: "🇵🇰" },
+            { name: "پرتغال", flag: "🇵🇹" },
+            { name: "ترکیه", flag: "🇹🇷" },
+            { name: "چین", flag: "🇨🇳" },
+            { name: "روسیه", flag: "🇷🇺" },
+            { name: "رومانی", flag: "🇷🇴" },
+            { name: "ژاپن", flag: "🇯🇵" },
+            { name: "سوریه", flag: "🇸🇾" },
+            { name: "سوئد", flag: "🇸🇪" },
+            { name: "سوئیس", flag: "🇨🇭" },
+            { name: "عراق", flag: "🇮🇶" },
+            { name: "عربستان سعودی", flag: "🇸🇦" },
+            { name: "فرانسه", flag: "🇫🇷" },
+            { name: "فلسطین", flag: "🇵🇸" },
+            { name: "قطر", flag: "🇶🇦" },
+            { name: "کانادا", flag: "🇨🇦" },
+            { name: "کره جنوبی", flag: "🇰🇷" },
+            { name: "مصر", flag: "🇪🇬" },
+            { name: "مراکش", flag: "🇲🇦" },
+            { name: "مکزیک", flag: "🇲🇽" },
+            { name: "هلند", flag: "🇳🇱" },
+            { name: "هند", flag: "🇮🇳" },
+            { name: "یونان", flag: "🇬🇷" },
+            { name: "ایتالیا", flag: "🇮🇹" },
+            { name: "اسپانیا", flag: "🇪🇸" },
+            { name: "ایران", flag: "🇮🇷" }
+        ];
+
+        // ---------- متغیرهای بازی ----------
+        let currentCountry = null;          // شیء کشور فعلی
+        let score = 0;
+        let isGameOver = false;            // برای جلوگیری از حدس مجدد بعد از جواب درست
+
+        // ---------- عناصر DOM ----------
+        const flagDisplay = document.getElementById('flagDisplay');
+        const hintText = document.getElementById('hintText');
+        const countryInput = document.getElementById('countryInput');
+        const guessBtn = document.getElementById('guessBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const messageDiv = document.getElementById('message');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+
+        // ---------- توابع کمکی ----------
+        function pickRandomCountry() {
+            const randomIndex = Math.floor(Math.random() * countries.length);
+            return { ...countries[randomIndex] }; // کپی از شیء
+        }
+
+        // نمایش کشور جدید
+        function loadNewCountry() {
+            currentCountry = pickRandomCountry();
+            flagDisplay.textContent = currentCountry.flag;
+            hintText.textContent = `🌎 حدس بزنید...`;
+            countryInput.value = '';
+            countryInput.focus();
+            isGameOver = false;
+            messageDiv.className = '';
+            messageDiv.textContent = '🤔 نام کشور را وارد کنید';
+            // غیرفعال کردن حالت خطا/موفقیت
+        }
+
+        // بروزرسانی امتیاز در صفحه
+        function updateScoreUI() {
+            scoreDisplay.textContent = `🏆 امتیاز: ${score}`;
+        }
+
+        // نمایش پیام موفقیت
+        function showSuccess() {
+            messageDiv.className = 'success';
+            messageDiv.textContent = `✅ درست! کشور ${currentCountry.name} ✅`;
+            isGameOver = true;
+            score++;
+            updateScoreUI();
+            hintText.textContent = `🇮🇷 ${currentCountry.name}`;
+        }
+
+        // نمایش پیام خطا
+        function showError(guess) {
+            messageDiv.className = 'error';
+            messageDiv.textContent = `❌ "${guess}" صحیح نیست. دوباره تلاش کن`;
+        }
+
+        // ---------- منطق حدس ----------
+        function handleGuess() {
+            // اگر بازی تمام شده (درست حدس زده) یا کشور وجود نداشته باشد
+            if (isGameOver || !currentCountry) {
+                messageDiv.className = '';
+                messageDiv.textContent = '⏳ روی دکمه "بعدی" کلیک کن تا کشور جدید بیاد';
+                return;
+            }
+
+            const guess = countryInput.value.trim();
+            if (guess === '') {
+                messageDiv.className = '';
+                messageDiv.textContent = '📝 لطفاً نام کشور را وارد کن';
+                return;
+            }
+
+            // مقایسه (بدون حساسیت به حروف بزرگ/کوچک و فاصله‌ها)
+            const normalizedGuess = guess.replace(/\s+/g, ' ').trim().toLowerCase();
+            const normalizedCountry = currentCountry.name.replace(/\s+/g, ' ').trim().toLowerCase();
+
+            if (normalizedGuess === normalizedCountry) {
+                showSuccess();
+            } else {
+                showError(guess);
+                // خطا: ورودی را پاک نمی‌کنیم تا کاربر بتواند ویرایش کند
+                countryInput.select();
+            }
+        }
+
+        // ---------- راه‌اندازی بازی ----------
+        function initGame() {
+            // تنظیم رویدادها
+            guessBtn.addEventListener('click', handleGuess);
+            nextBtn.addEventListener('click', function() {
+                loadNewCountry();
+                // اگر پیام موفقیت یا خطا بود، ریست می‌شود
+            });
+
+            // کلید Enter در ورودی
+            countryInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleGuess();
+                }
+            });
+
+            // بارگذاری اولین کشور
+            loadNewCountry();
+            updateScoreUI();
+
+            // فوکوس اولیه
+            setTimeout(() => countryInput.focus(), 100);
+        }
+
+        // اجرا
+        initGame();
+    })();
+</script>
+</body>
+</html>
